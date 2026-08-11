@@ -1,0 +1,7 @@
+node_modules/
+*.bak
+_*.py
+_*.js
+_recovered_style.css
+.DS_Store
+Thumbs.db
