@@ -17,9 +17,17 @@
        White canvas · grey column grid lines
        ======================================== */
     :root {
+      /* Otherhalf brand: blue #006fda · yellow #f7ff89 */
+      --blue: #006fda;
+      --blue-soft: #4790f2;
+      --blue-wash: #e8f3fc;
+      --blue-mid: #b7d6f7;
+      --yellow: #f7ff89;
+      --yellow-wash: #fcffc8;
+      --yellow-deep: #9a9412;
       --canvas: #fefdf9;
       --ink: #1a1917;
-      --ink-2: #4a6678;
+      --ink-2: #006fda;
       --body: #3a3834;
       --charcoal: #2c2a27;
       --muted: #7a746c;
@@ -29,26 +37,26 @@
       --mist: #ebe4db;
       --white: #ffffff;
       --surface: rgba(254, 253, 249, 0.92);
-      --mint: #d7ebe0;
-      --sky: #d9e6ef;
-      --peach: #f2d8cb;
-      --blush: #edd0c9;
-      --butter: #efe3c6;
-      --lilac: #e6dde8;
-      --accent: #4a6678;
-      --accent-soft: #6d8a9c;
-      --rainbow: linear-gradient(105deg, #c5d6e4 0%, #e8cfc8 38%, #ead9ad 68%, #cfe3d6 100%);
-      --grad-sky:    radial-gradient(circle at 32% 28%, #edf3f8 0%, #c8d8e6 100%);
-      --grad-violet: radial-gradient(circle at 32% 28%, #f0eaf1 0%, #d8ccd9 100%);
-      --grad-peach:  radial-gradient(circle at 32% 28%, #f8e8df 0%, #e8c8b8 100%);
-      --grad-mint:   radial-gradient(circle at 32% 28%, #e6f1ea 0%, #c4dccb 100%);
-      --grad-pink:   radial-gradient(circle at 32% 28%, #f6e4e0 0%, #e4c2bd 100%);
-      --grad-gold:   radial-gradient(circle at 32% 28%, #f5ecd6 0%, #e2d2a6 100%);
+      --mint: var(--yellow-wash);
+      --sky: var(--blue-wash);
+      --peach: var(--yellow);
+      --blush: var(--yellow-wash);
+      --butter: var(--yellow);
+      --lilac: var(--blue-mid);
+      --accent: var(--blue);
+      --accent-soft: var(--blue-soft);
+      --rainbow: var(--blue);
+      --grad-sky:    var(--blue);
+      --grad-violet: var(--blue-soft);
+      --grad-peach:  var(--yellow);
+      --grad-mint:   var(--blue);
+      --grad-pink:   var(--yellow);
+      --grad-gold:   var(--yellow);
 
       --font-body: 'Satoshi', 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;
       --font-display: 'Cabinet Grotesk', 'Satoshi', 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;
 
-      --radius-card: 24px;
+      --radius-card: 18px;
       --radius-pill: 9999px;
       --radius-btn: 9999px;
 
@@ -88,13 +96,14 @@
       top: 18px;
       left: 50%;
       transform: translateX(-50%);
+      /* frosted glass island */
       z-index: 1000;
-      background: rgba(254, 253, 249, 0.82);
-      backdrop-filter: blur(24px) saturate(1.2);
-      -webkit-backdrop-filter: blur(24px) saturate(1.2);
-      border: 1px solid rgba(48, 36, 24, 0.06);
-      border-radius: 9999px;
-      padding: 6px 10px 6px 16px;
+      background: rgba(254, 253, 249, 0.42);
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: var(--radius-pill);
+      padding: 6px 16px;
       height: 54px;
       display: flex;
       align-items: center;
@@ -104,8 +113,8 @@
       max-width: calc(100vw - 32px);
     }
     .nav.scrolled {
-      background: rgba(254, 253, 249, 0.94);
-      box-shadow: 0 14px 36px -14px rgba(48, 36, 24, 0.15), 0 2px 8px rgba(48, 36, 24, 0.04);
+      background: rgba(254, 253, 249, 0.58);
+      box-shadow: 0 14px 36px -14px rgba(48, 36, 24, 0.12), 0 2px 8px rgba(48, 36, 24, 0.04);
     }
 
     .nav-brand {
@@ -121,7 +130,7 @@
     }
     .nav-brand-dot {
       width: 9px; height: 9px;
-      border-radius: 50%;
+      border-radius: 0;
       background: var(--accent);
       flex-shrink: 0;
     }
@@ -148,19 +157,6 @@
       font-weight: 600;
     }
 
-    /* Colorful Ring Icon (right side) */
-    .nav-ring {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, #9bb8cc, #c4b0c8, #e0b8ae, #e2c98a, #a8c9b4, #9bb8cc);
-      -webkit-mask: radial-gradient(circle, transparent 56%, #000 58%);
-      mask: radial-gradient(circle, transparent 56%, #000 58%);
-      cursor: pointer;
-      transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
-      flex-shrink: 0;
-    }
-    .nav-ring:hover { transform: rotate(180deg) scale(1.1); }
-
     .nav-toggle {
       display: none;
       flex-direction: column;
@@ -170,7 +166,7 @@
     .nav-toggle span {
       width: 20px; height: 2px;
       background: var(--ink);
-      border-radius: 2px;
+      border-radius: 0;
       transition: 0.3s;
     }
 
@@ -180,7 +176,7 @@
       top: 0; left: 0;
       height: 2px;
       width: 0%;
-      background: var(--rainbow);
+      background: var(--blue);
       z-index: 9999;
     }
 
@@ -216,10 +212,36 @@
       font-family: var(--font-display);
       font-size: clamp(28px, 4.5vw, 44px);
       font-weight: 500;
-      line-height: 1.04;
+      line-height: 1.15;
       letter-spacing: -0.03em;
       color: var(--ink);
-      margin-bottom: 12px;
+      margin-bottom: 28px;
+    }
+    /* Full-bleed yellow title bars: education / experience / explore / contact */
+    #education .section-title,
+    #experience .section-title,
+    #explore .section-title,
+    #contact .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      margin-bottom: 48px;
+      padding: 0.72em 24px;
+      min-height: 2.4em;
+      line-height: 1;
+      background: var(--yellow);
+      text-align: center;
+      box-sizing: border-box;
+      border-radius: 0;
+    }
+    #education .edu-intro,
+    #experience > .reveal:first-child,
+    #explore > .reveal:first-child {
+      margin-bottom: 0;
     }
     .section-subtitle {
       font-family: var(--font-body);
@@ -232,10 +254,10 @@
     }
 
     .rainbow-text {
-      background: var(--rainbow);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background: var(--yellow);
+      color: var(--ink);
+      -webkit-text-fill-color: unset;
+      padding: 0 0.12em;
     }
 
     /* Reveal animation base */
@@ -289,7 +311,7 @@
       object-position: center;
     }
 
-    /* Bubble tags — circular pastel gradient bubbles with gather-then-scatter animation */
+    /* Bubble tags — circular, blue/yellow only, always above page copy */
     .bubble-tag {
       position: absolute;
       display: flex;
@@ -302,8 +324,8 @@
       text-align: center;
       line-height: 1.22;
       letter-spacing: 0.01em;
-      box-shadow: 0 0 0 1px rgba(8,48,76,0.06), rgba(0,0,0,0.04) 0px 8px 16px -4px;
-      z-index: 5;
+      box-shadow: 0 0 0 1px rgba(0,111,218,0.08), rgba(0,0,0,0.04) 0px 8px 16px -4px;
+      z-index: 2500;
       opacity: 0;
       transform: scale(0.3) translateY(20px);
       transition: opacity 0.6s cubic-bezier(0.34,1.56,0.64,1),
@@ -323,12 +345,12 @@
     }
 
     /* Gradient fills keyed to data-color — echo the ambient orbs */
-    .bubble-tag[data-color="sky"]    { background: var(--grad-sky); }
-    .bubble-tag[data-color="violet"] { background: var(--grad-violet); }
-    .bubble-tag[data-color="peach"]  { background: var(--grad-peach); }
-    .bubble-tag[data-color="mint"]   { background: var(--grad-mint); }
-    .bubble-tag[data-color="pink"]   { background: var(--grad-pink); }
-    .bubble-tag[data-color="gold"]   { background: var(--grad-gold); }
+    .bubble-tag[data-color="sky"]    { background: var(--blue); color: #fff; }
+    .bubble-tag[data-color="violet"] { background: var(--blue); color: #fff; }
+    .bubble-tag[data-color="peach"]  { background: var(--yellow); color: var(--ink); }
+    .bubble-tag[data-color="mint"]   { background: var(--blue); color: #fff; }
+    .bubble-tag[data-color="pink"]   { background: var(--yellow); color: var(--ink); }
+    .bubble-tag[data-color="gold"]   { background: var(--yellow); color: var(--ink); }
 
     /* Bubble positions — fully inside first viewport; avoid text overlap; 产品设计 largest */
     .bubble-tag[data-tag="bg"] {
@@ -346,7 +368,7 @@
       width: 184px; height: 184px;
       padding: 16px; font-size: 19px;
       font-weight: 700;
-      z-index: 20;
+      z-index: 2501;
     }
     .bubble-tag[data-tag="ai"] {
       bottom: 10%; left: 3%;
@@ -442,9 +464,8 @@
       color: var(--ink);
       padding: 11px 24px;
       border-radius: var(--radius-btn);
-      border: 1.5px solid transparent;
-      background: linear-gradient(var(--white), var(--white)) padding-box,
-                  var(--rainbow) border-box;
+      border: 1.5px solid var(--blue);
+      background: var(--white);
       box-shadow: 0 1px 2px rgba(48, 36, 24, 0.04);
       transition: transform 0.25s, box-shadow 0.25s;
     }
@@ -564,17 +585,17 @@
       visibility: visible;
       background: #f5f6f8;
       border-color: transparent;
-      box-shadow: 0 0 0 1px rgba(8,48,76,0.06), rgba(0,0,0,0.04) 0px 8px 16px -4px;
+      box-shadow: 0 0 0 1px rgba(0,111,218,0.08), rgba(0,0,0,0.04) 0px 8px 16px -4px;
       transform: translate(-50%, -50%) scale(1);
       z-index: 2;
       pointer-events: auto;
     }
-    .wall-tag.filled[data-color="sky"]    { background: var(--grad-sky); }
-    .wall-tag.filled[data-color="violet"] { background: var(--grad-violet); }
-    .wall-tag.filled[data-color="peach"]  { background: var(--grad-peach); }
-    .wall-tag.filled[data-color="mint"]   { background: var(--grad-mint); }
-    .wall-tag.filled[data-color="pink"]   { background: var(--grad-pink); }
-    .wall-tag.filled[data-color="gold"]   { background: var(--grad-gold); }
+    .wall-tag.filled[data-color="sky"]    { background: var(--blue); color: #fff; }
+    .wall-tag.filled[data-color="violet"] { background: var(--blue); color: #fff; }
+    .wall-tag.filled[data-color="peach"]  { background: var(--yellow); color: var(--ink); }
+    .wall-tag.filled[data-color="mint"]   { background: var(--blue); color: #fff; }
+    .wall-tag.filled[data-color="pink"]   { background: var(--yellow); color: var(--ink); }
+    .wall-tag.filled[data-color="gold"]   { background: var(--yellow); color: var(--ink); }
 
     /* Match home bubble sizes; positions spaced so circles do not overlap */
     .wall-tag[data-tag="bg"] {
@@ -677,10 +698,10 @@
       background: none;
       border-radius: 0;
     }
-    .about-skill-chip.sky { color: var(--ink-2); }
-    .about-skill-chip.mint { color: #066b2b; }
-    .about-skill-chip.peach { color: #9a5615; }
-    .about-skill-chip.mist { color: var(--iron); }
+    .about-skill-chip.sky { color: var(--blue); }
+    .about-skill-chip.mint { color: var(--blue-soft); }
+    .about-skill-chip.peach { color: var(--yellow-deep); }
+    .about-skill-chip.mist { color: var(--blue); }
 
     /* ========================================
        Section 3: Education — Dual photo board
@@ -693,30 +714,34 @@
 
     .edu-intro {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 0;
       width: 100%;
     }
 
     .edu-board {
       position: relative;
-      width: min(1100px, 100%);
+      width: min(1180px, 100%);
       margin: 0 auto;
-      min-height: min(72vh, 640px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: min(78vh, 680px);
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto minmax(200px, 1fr);
+      align-items: stretch;
+      gap: 28px 32px;
       padding: 8px 0 20px;
     }
 
     .edu-copy-ug {
-      position: absolute;
-      top: 0;
-      left: 0;
+      position: relative;
+      top: auto;
+      left: auto;
       z-index: 4;
-      max-width: min(300px, 32%);
+      max-width: none;
+      width: 100%;
+      align-self: start;
+      padding-top: 14px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       transition: opacity 0.4s;
       cursor: pointer;
     }
@@ -726,33 +751,40 @@
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      gap: 14px;
-      width: min(420px, 46vw);
-      height: min(68vh, 600px);
+      gap: 16px;
+      width: min(460px, 42vw);
+      height: min(72vh, 640px);
       margin: 0 auto;
       z-index: 1;
       overflow: visible;
+      padding: 14px;
+      grid-column: 2;
     }
 
     .edu-copy-ms {
-      position: absolute;
-      right: 0;
-      bottom: 0;
+      position: relative;
+      right: auto;
+      bottom: auto;
       z-index: 4;
-      max-width: min(280px, 30%);
+      max-width: none;
+      width: 100%;
+      align-self: start;
       text-align: right;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       align-items: flex-end;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.04);
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: none;
       transition: opacity 0.4s;
       cursor: pointer;
+      margin: 0;
+      /* Align with master's shot top: collage pad + ug(2/3) + gap */
+      margin-top: calc(14px + (min(72vh, 640px) - 44px) * 2 / 3 + 16px);
     }
 
     .edu-board[data-focus="ug"] .edu-copy-ms { opacity: 0.38; }
@@ -761,10 +793,9 @@
     .edu-board[data-focus="ms"] .edu-copy-ms { opacity: 1; }
 
     .edu-kicker {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+      letter-spacing: 0.08em;
       color: var(--ink-2);
       background: var(--sky);
       padding: 4px 12px;
@@ -772,8 +803,8 @@
       width: fit-content;
     }
     .edu-copy-ms .edu-kicker {
-      background: var(--peach);
-      color: #9a5615;
+      background: var(--yellow);
+      color: var(--ink);
     }
 
     .edu-school {
@@ -819,7 +850,7 @@
       border: none;
       padding: 0;
       cursor: pointer;
-      border-radius: 20px;
+      border-radius: 0;
       overflow: hidden;
       background: var(--mist);
       box-shadow: var(--shadow-card);
@@ -841,15 +872,15 @@
       transition: filter 0.45s ease, transform 0.45s ease;
       pointer-events: none;
     }
-    /* Head & shoulders dominant crop */
+    /* Pre-cropped asset — head at top, fill frame, no blank */
     .edu-shot-ug img {
-      object-position: 50% 12%;
-      transform: scale(1.28);
-      transform-origin: 50% 18%;
+      object-fit: cover;
+      object-position: center top;
+      transform: none;
     }
 
     .edu-shot-ms video {
-      background: #0f1a24;
+      background: #003a72;
       object-position: center 40%;
     }
 
@@ -869,7 +900,7 @@
       transform: scale(1.045);
     }
 
-    /* Viewfinder corners — moved by JS to active shot */
+    /* Viewfinder sits outside the photo (in collage padding), no overlap */
     .edu-finder {
       position: absolute;
       pointer-events: none;
@@ -881,16 +912,16 @@
     }
     .edu-finder span {
       position: absolute;
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       border-color: var(--ink);
       border-style: solid;
-      opacity: 0.9;
+      opacity: 0.85;
     }
-    .edu-finder .c-tl { top: -8px; left: -8px; border-width: 2px 0 0 2px; }
-    .edu-finder .c-tr { top: -8px; right: -8px; border-width: 2px 2px 0 0; }
-    .edu-finder .c-bl { bottom: -8px; left: -8px; border-width: 0 0 2px 2px; }
-    .edu-finder .c-br { bottom: -8px; right: -8px; border-width: 0 2px 2px 0; }
+    .edu-finder .c-tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+    .edu-finder .c-tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+    .edu-finder .c-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+    .edu-finder .c-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
 
     /* ========================================
        Section 4: Experience — Arc + Dial
@@ -907,19 +938,19 @@
 
     .exp-arc {
       position: relative;
-      height: min(54vh, 460px);
+      height: min(48vh, 420px);
       perspective: 1400px;
-      margin-bottom: 28px;
+      margin-bottom: 8px;
     }
 
     .exp-card {
       position: absolute;
       left: 50%;
-      top: 44%;
-      width: 300px;
-      height: 440px;
-      margin-left: -150px;
-      margin-top: -220px;
+      top: 48%;
+      width: 286px;
+      height: 420px;
+      margin-left: -143px;
+      margin-top: -210px;
       border: none;
       padding: 0;
       background: transparent;
@@ -970,9 +1001,11 @@
       transform: rotateY(180deg);
       display: flex;
       flex-direction: column;
-      padding: 12px 12px 8px;
+      padding: 16px 16px 14px;
       text-align: left;
       overflow: hidden;
+      height: 100%;
+      box-sizing: border-box;
     }
 
     .exp-card-cover {
@@ -998,19 +1031,13 @@
     .exp-card-cover::after { display: none; }
     /* Neutral stock-style placeholders when photo assets are missing */
     .exp-card-cover.is-placeholder {
-      background:
-        radial-gradient(ellipse 70% 55% at 28% 22%, rgba(255,252,248,0.55), transparent 58%),
-        linear-gradient(155deg, #d5e0ea 0%, #b8c9d6 42%, #9eb0c0 100%);
+      background: var(--blue);
     }
     .exp-card[data-exp="xingye"] .exp-card-cover.is-placeholder {
-      background:
-        radial-gradient(ellipse 65% 50% at 72% 18%, rgba(255,252,248,0.4), transparent 55%),
-        linear-gradient(160deg, #c5d4e0 0%, #8fa8bb 48%, #6d8799 100%);
+      background: var(--blue);
     }
     .exp-card[data-exp="shifeng"] .exp-card-cover.is-placeholder {
-      background:
-        radial-gradient(ellipse 70% 55% at 24% 30%, rgba(255,252,248,0.45), transparent 55%),
-        linear-gradient(155deg, #d8d2c8 0%, #b8afa0 45%, #8f8678 100%);
+      background: var(--yellow);
     }
 
     .exp-card-body {
@@ -1048,76 +1075,76 @@
     }
 
     .exp-card-back-head {
-      margin-bottom: 6px;
-      padding-bottom: 5px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
       border-bottom: 1px solid var(--mist);
       flex-shrink: 0;
     }
     .exp-card-back-company {
       font-family: var(--font-display);
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 600;
       color: var(--ink);
+      line-height: 1.2;
     }
     .exp-card-back-meta {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
-      margin-top: 2px;
+      margin-top: 4px;
+      line-height: 1.35;
     }
     .exp-card-back-body {
-      flex: 1;
+      flex: 1 1 auto;
       min-height: 0;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      gap: 5px;
+      justify-content: space-between;
+      gap: 8px;
       overflow: hidden;
     }
     .exp-bullet {
       display: flex;
       flex-direction: column;
-      gap: 1px;
-      padding-left: 8px;
-      border-left: 2px solid rgba(8,78,114,0.18);
-      flex: 1 1 auto;
+      justify-content: center;
+      gap: 3px;
+      padding-left: 9px;
+      border-left: 2px solid rgba(0,111,218,0.28);
+      margin: 0;
+      flex: 1 1 0;
       min-height: 0;
     }
     .exp-bullet-title {
-      font-size: 11px;
+      font-size: 13.5px;
       font-weight: 600;
       color: var(--ink);
-      line-height: 1.2;
+      line-height: 1.3;
+      margin: 0;
     }
     .exp-bullet-desc {
-      font-size: 10px;
-      line-height: 1.28;
+      font-size: 12px;
+      line-height: 1.45;
       color: var(--body);
+      margin: 0;
     }
-    .exp-card-back-foot {
-      flex-shrink: 0;
-      margin-top: 4px;
-      font-size: 10px;
-      color: var(--fog);
-      text-align: center;
-    }
+    .exp-card-back-foot { display: none; }
 
-    /* Bottom timeline dial — fixed relative ticks, ring rotates */
+    /* Bottom timeline dial — dates above arc; needle crosses arc; dot below */
     .exp-dial {
       position: relative;
       width: min(720px, 100%);
-      height: 160px;
-      margin: 12px auto 0;
+      height: 168px;
+      margin: 36px auto 0;
       user-select: none;
     }
     .exp-dial-viewport {
       position: relative;
-      height: 120px;
+      height: 124px;
       overflow: hidden;
     }
     .exp-dial-ring {
       position: absolute;
       left: 50%;
-      top: 28px;
+      top: 52px;
       width: 620px;
       height: 620px;
       margin-left: -310px;
@@ -1125,17 +1152,17 @@
       border: 1px solid var(--fog);
       transform-origin: center center;
       transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-      background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.02) 0%, transparent 42%);
+      background: transparent;
       pointer-events: none;
     }
     .exp-dial-ring .exp-dial-tick { pointer-events: auto; }
     .exp-dial-tick {
       position: absolute;
       left: 50%;
-      top: -28px;
+      top: -34px;
       width: 88px;
       margin-left: -44px;
-      transform-origin: 50% 338px;
+      transform-origin: 50% 344px;
       text-align: center;
       border: none;
       background: none;
@@ -1172,29 +1199,30 @@
       letter-spacing: 0.02em;
       line-height: 1.2;
     }
+    /* Needle sits under dates, crosses the arc; dot sits below the arc */
     .exp-dial-needle {
       position: absolute;
       left: 50%;
-      top: 6px;
+      top: 38px;
       width: 2px;
-      height: 22px;
+      height: 28px;
       margin-left: -1px;
       background: var(--ink-2);
-      border-radius: 2px;
-      z-index: 3;
+      border-radius: 0;
+      z-index: 4;
       pointer-events: none;
     }
     .exp-dial-needle::after {
       content: '';
       position: absolute;
       left: 50%;
-      bottom: -4px;
+      bottom: -1px;
       width: 8px;
       height: 8px;
       margin-left: -4px;
       border-radius: 50%;
       background: var(--ink-2);
-      box-shadow: 0 0 0 4px rgba(8,78,114,0.12);
+      box-shadow: 0 0 0 3px rgba(0,111,218,0.14);
     }
 
     .exp-dial-nav {
@@ -1253,14 +1281,14 @@
     .bento-header { display: flex; align-items: center; gap: 12px; }
     .bento-icon {
       width: 44px; height: 44px;
-      border-radius: 12px;
+      border-radius: 0;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .bento-icon.sky { background: var(--sky); color: var(--ink-2); }
-    .bento-icon.mint { background: var(--mint); color: #066b2b; }
-    .bento-icon.peach { background: var(--peach); color: #9a5615; }
-    .bento-icon.mist { background: var(--mist); color: var(--iron); }
+    .bento-icon.sky { background: var(--blue-wash); color: var(--blue); }
+    .bento-icon.mint { background: var(--yellow-wash); color: var(--yellow-deep); }
+    .bento-icon.peach { background: var(--yellow); color: var(--ink); }
+    .bento-icon.mist { background: var(--blue-mid); color: var(--blue); }
     .bento-title {
       font-family: var(--font-display);
       font-size: 19px; font-weight: 600; color: var(--ink);
@@ -1270,10 +1298,10 @@
       font-size: 14px; font-weight: 500;
       padding: 8px 16px; border-radius: var(--radius-pill);
     }
-    .bento-tag.sky { background: var(--sky); color: var(--ink-2); }
-    .bento-tag.mint { background: var(--mint); color: #066b2b; }
-    .bento-tag.peach { background: var(--peach); color: #9a5615; }
-    .bento-tag.mist { background: var(--mist); color: var(--iron); }
+    .bento-tag.sky { background: var(--blue-wash); color: var(--blue); }
+    .bento-tag.mint { background: var(--yellow-wash); color: var(--yellow-deep); }
+    .bento-tag.peach { background: var(--yellow); color: var(--ink); }
+    .bento-tag.mist { background: var(--blue-mid); color: var(--blue); }
     .bento-scores { display: flex; gap: 32px; }
     .bento-score-item { display: flex; flex-direction: column; gap: 2px; }
     .bento-score-label { font-size: 12px; color: var(--muted); }
@@ -1284,9 +1312,9 @@
        ======================================== */
     .explore-accordion {
       display: flex;
-      gap: 16px;
-      width: min(1380px, 96vw);
-      height: min(640px, 78vh);
+      gap: 14px;
+      width: min(1100px, calc(100vw - 448px));
+      height: min(620px, 76vh);
       margin: 0 auto;
       opacity: 0;
       transform: translateY(24px);
@@ -1303,7 +1331,7 @@
       flex-basis: 0;
       border: none;
       padding: 0;
-      border-radius: 32px;
+      border-radius: 0;
       overflow: hidden;
       cursor: pointer;
       text-align: left;
@@ -1319,35 +1347,22 @@
     .explore-panel-bg {
       position: absolute;
       inset: 0;
-      transition: transform 0.7s ease, filter 0.45s;
-    }
-    .explore-panel[data-panel="research"] .explore-panel-bg {
-      background:
-        radial-gradient(ellipse 80% 60% at 70% 30%, rgba(255,252,247,0.42), transparent 55%),
-        linear-gradient(145deg, #d7e6f2 0%, #9fbdd4 48%, #6a93b0 100%);
-    }
-    .explore-panel[data-panel="practice"] .explore-panel-bg {
-      background:
-        radial-gradient(ellipse 70% 50% at 30% 80%, rgba(255,236,210,0.5), transparent 50%),
-        linear-gradient(155deg, #f3d7b4 0%, #e0ad78 50%, #c8844a 100%);
-    }
-    .explore-panel[data-panel="campus"] .explore-panel-bg {
-      background:
-        radial-gradient(ellipse 75% 55% at 75% 20%, rgba(220,245,228,0.45), transparent 55%),
-        linear-gradient(150deg, #c5e4cf 0%, #7bb892 52%, #4a8a64 100%);
+      background: var(--blue);
+      transition: background 0.35s ease, transform 0.7s ease;
     }
     .explore-panel.is-open .explore-panel-bg {
-      filter: saturate(1.08) brightness(1.04);
       transform: scale(1.03);
     }
     .explore-panel.is-open .explore-panel-bg::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(105deg, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.62) 42%, rgba(255,255,255,0.18) 78%, transparent 100%);
+      background: rgba(254, 253, 249, 0.88);
+      transition: background 0.35s ease, opacity 0.35s ease;
     }
-    .explore-panel:not(.is-open) .explore-panel-bg {
-      filter: saturate(1.15) contrast(1.05);
+    .explore-panel:not(.is-open):hover .explore-panel-bg,
+    .explore-panel:not(.is-open):focus-visible .explore-panel-bg {
+      background: var(--yellow);
     }
     .explore-panel-label {
       position: absolute;
@@ -1356,16 +1371,22 @@
       align-items: center;
       justify-content: center;
       writing-mode: vertical-rl;
-      transform: rotate(180deg);
+      text-orientation: upright;
+      transform: none;
       font-family: var(--font-display);
-      font-size: clamp(20px, 2.2vw, 28px);
+      font-size: clamp(22px, 2.4vw, 30px);
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.18em;
       color: #fff;
       text-shadow: 0 1px 12px rgba(0,0,0,0.18);
       opacity: 1;
-      transition: opacity 0.25s;
+      transition: opacity 0.25s, color 0.35s ease, text-shadow 0.35s ease;
       z-index: 2;
+    }
+    .explore-panel:not(.is-open):hover .explore-panel-label,
+    .explore-panel:not(.is-open):focus-visible .explore-panel-label {
+      color: var(--ink);
+      text-shadow: none;
     }
     .explore-panel.is-open .explore-panel-label {
       opacity: 0;
@@ -1375,16 +1396,18 @@
       position: relative;
       z-index: 2;
       height: 100%;
-      padding: 28px 36px 28px;
+      padding: 26px 32px 24px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       opacity: 0;
       transform: translateX(16px);
       pointer-events: none;
       transition: opacity 0.35s ease 0.12s, transform 0.5s cubic-bezier(0.22,1,0.36,1);
-      max-width: 820px;
-      overflow: auto;
+      max-width: none;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
     }
     .explore-panel.is-open .explore-panel-body {
       opacity: 1;
@@ -1401,12 +1424,13 @@
     }
     .explore-panel-title {
       font-family: var(--font-display);
-      font-size: clamp(24px, 2.6vw, 34px);
+      font-size: clamp(26px, 2.8vw, 36px);
       font-weight: 600;
       letter-spacing: -0.03em;
       color: var(--ink);
       line-height: 1.1;
       flex-shrink: 0;
+      margin: 0;
     }
     .explore-panel-desc {
       font-size: 15px;
@@ -1418,32 +1442,38 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-top: 4px;
-      overflow: visible;
+      margin-top: 2px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+      justify-content: space-between;
     }
     .explore-item {
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      padding: 8px 11px;
-      background: rgba(255,255,255,0.78);
-      border-radius: 12px;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.82);
+      border-radius: 0;
       backdrop-filter: blur(8px);
+      flex: 1 1 0;
+      min-height: 0;
     }
     .explore-item-title {
-      font-size: 12.5px;
+      font-size: 14.5px;
       font-weight: 600;
       color: var(--ink);
       line-height: 1.35;
     }
     .explore-item-time {
-      font-size: 10.5px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 0.02em;
     }
     .explore-item-body {
-      font-size: 11.5px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.55;
       color: var(--body);
     }
     .explore-panel-points li {
@@ -1451,7 +1481,7 @@
       color: var(--ink);
       padding: 8px 12px;
       background: rgba(255,255,255,0.72);
-      border-radius: 12px;
+      border-radius: 0;
       backdrop-filter: blur(8px);
       line-height: 1.5;
     }
@@ -1459,7 +1489,7 @@
       margin-top: auto;
       width: 42px;
       height: 42px;
-      border-radius: 50%;
+      border-radius: 0;
       background: var(--ink);
       color: #fff;
       display: inline-flex;
@@ -1469,58 +1499,46 @@
     }
 
     /* ========================================
-       Section 7: Contact
+       Section 7: Contact — compact
        ======================================== */
-    .contact { align-items: center; text-align: center; }
-    .contact-card {
-      max-width: 700px; width: 100%;
-      background: var(--white);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-card);
-      padding: 56px 40px;
+    .contact {
+      align-items: center;
       text-align: center;
+      min-height: 42vh;
+      padding-top: 64px;
+      padding-bottom: 64px;
+      justify-content: center;
     }
-    .contact-title {
+    .contact-simple {
+      max-width: 480px;
+      width: 100%;
+    }
+    .contact-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+    }
+    .contact-line {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      color: var(--ink);
+      transition: opacity 0.2s;
+    }
+    .contact-line:hover { opacity: 0.72; }
+    .contact-line-label {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .contact-line-val {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink);
       font-family: var(--font-display);
-      font-size: clamp(28px,4vw,40px);
-      font-weight: 600; color: var(--ink);
-      letter-spacing: -0.02em; margin-bottom: 12px;
     }
-    .contact-sub { font-size: 16px; color: var(--muted); margin-bottom: 40px; }
-    .contact-methods {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;
-      margin-bottom: 32px;
-    }
-    .contact-method {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--white);
-      border: 1px solid var(--mist);
-      border-radius: var(--radius-card);
-      padding: 20px 24px;
-      min-width: 260px;
-      transition: transform 0.25s, box-shadow 0.25s;
-    }
-    .contact-method:hover { transform: translateY(-3px); box-shadow: var(--shadow-float); }
-    .contact-method-icon {
-      width: 40px; height: 40px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .contact-method-info { text-align: left; }
-    .contact-method-label { font-size: 12px; color: var(--muted); }
-    .contact-method-val { font-size: 15px; color: var(--ink); font-weight: 500; word-break: break-all; }
-
-    .contact-socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-    .contact-social {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 14px; font-weight: 500; color: var(--muted);
-      background: var(--white); border: 1px solid var(--mist);
-      padding: 10px 18px; border-radius: var(--radius-pill);
-      transition: all 0.25s;
-    }
-    .contact-social:hover { color: var(--ink); border-color: var(--ash); transform: translateY(-2px); }
-    .contact-social.placeholder { opacity: 0.5; }
 
     /* ========================================
        Footer
@@ -1533,9 +1551,6 @@
       font-size: 13px; color: var(--muted);
       display: flex; align-items: center; justify-content: center;
       gap: 8px; flex-wrap: wrap;
-    }
-    .footer-dot {
-      width: 10px; height: 10px; border-radius: 3px; background: var(--rainbow);
     }
 
     /* ========================================
@@ -1558,14 +1573,46 @@
       }
     }
 
+
+    /* Cursor blue glow + trail */
+    .cursor-glow-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 900;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .cursor-glow-layer.is-on { opacity: 1; }
+    .cursor-glow {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 72px;
+      height: 72px;
+      margin: -36px 0 0 -36px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(0, 111, 218, 0.28) 0%, rgba(0, 111, 218, 0.1) 40%, rgba(0, 111, 218, 0) 72%);
+      will-change: transform;
+      filter: blur(0.5px);
+    }
+    @media (pointer: coarse) {
+      .cursor-glow-layer { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cursor-glow-layer { display: none; }
+    }
+
     /* Ensure content sits above ambient */
     .section, .footer, .scroll-progress { position: relative; z-index: 1; }
+    .home { z-index: 5; }
+    .about { z-index: 2; }
     .nav, .scroll-progress { z-index: 1000; }
 
-    /* Nav ring slow rotation */
-    .nav-ring { animation: ringSpin 12s linear infinite; }
-    @keyframes ringSpin { to { transform: rotate(360deg); } }
-    .nav-ring:hover { animation-play-state: paused; transform: rotate(180deg) scale(1.1); }
+    /* Nav ring slow rotation — removed */
+
 
     /* Breathing animation for cards */
     .bento-card.visible, .explore-accordion.visible, .contact-card {
@@ -1591,22 +1638,11 @@
     }
     .wall-tag.filled:hover {
       transform: translate(-50%, -50%) scale(1.08) translateY(-3px);
-      box-shadow: 0 0 0 1px rgba(8,48,76,0.10), rgba(0,0,0,0.06) 0px 12px 24px -6px;
+      box-shadow: 0 0 0 1px rgba(0,111,218,0.12), rgba(0,0,0,0.06) 0px 12px 24px -6px;
       z-index: 10;
     }
 
-    /* Section transition gradient divider */
-    .section::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 120px; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--ash), transparent);
-      opacity: 0;
-      transition: opacity 0.6s;
-    }
-    .section.visible-divider::before { opacity: 1; }
+    /* Section dividers removed */
 
     .contact-card {
       position: relative;
@@ -1624,7 +1660,7 @@
         display: flex; position: absolute; top: 56px; left: 0; right: 0;
         flex-direction: column; background: rgba(255,252,247,0.94);
         backdrop-filter: blur(16px);
-        padding: 16px; gap: 4px; border-radius: 0 0 24px 24px;
+        padding: 16px; gap: 4px; border-radius: 0;
         border: 1px solid rgba(48, 36, 24, 0.06);
       }
 
@@ -1652,6 +1688,7 @@
         text-align: left;
         align-items: flex-start;
         margin: 0;
+        margin-top: 0;
         padding: 0;
         background: none;
         box-shadow: none;
@@ -1668,21 +1705,21 @@
 
       .exp-arc { height: 380px; min-height: 0; perspective: none; margin-bottom: 20px; }
       .exp-card {
-        width: min(280px, 88vw);
-        height: 400px;
-        margin-left: calc(min(280px, 88vw) / -2);
-        margin-top: -200px;
+        width: min(300px, 88vw);
+        height: 440px;
+        margin-left: calc(min(300px, 88vw) / -2);
+        margin-top: -220px;
       }
       .exp-dial { height: auto; margin-top: 8px; }
-      .exp-dial-viewport { height: 100px; }
+      .exp-dial-viewport { height: 112px; }
       .exp-dial-ring {
         width: 480px;
         height: 480px;
         margin-left: -240px;
-        top: 22px;
+        top: 40px;
       }
-      .exp-dial-tick { transform-origin: 50% 262px; width: 80px; margin-left: -40px; top: -22px; }
-      .exp-dial-needle { top: 4px; }
+      .exp-dial-tick { transform-origin: 50% 266px; width: 80px; margin-left: -40px; top: -26px; }
+      .exp-dial-needle { top: 28px; height: 24px; }
 
       .explore-accordion {
         flex-direction: column;
@@ -1734,6 +1771,8 @@
   <!-- Ambient Background — Otherhalf white + grey grid -->
   <div class="ambient-bg" aria-hidden="true"></div>
 
+  <div class="cursor-glow-layer" id="cursorGlowLayer" aria-hidden="true"></div>
+
   <!-- Scroll Progress -->
   <div class="scroll-progress" id="scrollProgress"></div>
 
@@ -1747,7 +1786,6 @@
       <a class="nav-link" data-section="explore">探索更多</a>
       <a class="nav-link" data-section="contact">联系方式</a>
     </div>
-    <div class="nav-ring" data-section="contact" title="联系方式"></div>
     <button class="nav-toggle" id="navToggle" aria-label="菜单">
       <span></span><span></span><span></span>
     </button>
@@ -1762,7 +1800,7 @@
       </div>
       <p class="home-placeholder" id="homeTypewriter" data-text="现于香港中文大学（深圳）攻读金融工程硕士学位，是拥有 3 段互联网实习，持续探索 AI 应用，致力于成为合格产品经理的成长型选手。"></p>
       <div class="home-actions">
-        <a class="btn-primary" id="downloadResume">
+        <a class="btn-primary" id="downloadResume" href="assets/resume.pdf" download="罗丹简历.pdf">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           下载简历
         </a>
@@ -1805,8 +1843,7 @@
       </div>
       <div class="about-side">
         <div class="about-bio reveal">
-          <span class="section-eyebrow">About Me</span>
-          <h2 class="section-title">关于我</h2>
+<h2 class="section-title">关于我</h2>
           <p>
             <strong>拥有数学与金融的复合学术背景</strong>，数理分析功底扎实；英语综合能力良好，雅思 7.0，大学英语六级 572 分，可熟练开展英文读写沟通。同时具备成熟的 <strong>AI 落地实践经验</strong>，熟练运用各类主流大模型、AI 多媒体生成工具，掌握 Vibe Coding 快速搭建原型与部署上线，能够基于 Agent 平台开发 Skill、搭建自动化工作流。
           </p>
@@ -1821,39 +1858,39 @@
           <div class="about-skills-viewport">
             <div class="about-skills-track">
               <span class="about-skill-chip sky">用户需求分析</span>
-              <span class="about-skill-chip sky">产品设计</span>
-              <span class="about-skill-chip sky">策略优化</span>
-              <span class="about-skill-chip sky">实验分析</span>
-              <span class="about-skill-chip sky">项目推进</span>
-              <span class="about-skill-chip mint">SQL</span>
-              <span class="about-skill-chip mint">Python</span>
-              <span class="about-skill-chip mint">Stata</span>
-              <span class="about-skill-chip mint">Matlab</span>
-              <span class="about-skill-chip mint">Office</span>
               <span class="about-skill-chip peach">大模型工具</span>
-              <span class="about-skill-chip peach">Agent 工作流</span>
-              <span class="about-skill-chip peach">Prompt 设计</span>
-              <span class="about-skill-chip peach">Vibe Coding</span>
-              <span class="about-skill-chip peach">快速原型</span>
+              <span class="about-skill-chip mint">SQL</span>
               <span class="about-skill-chip mist">IELTS 7.0</span>
+              <span class="about-skill-chip sky">产品设计</span>
+              <span class="about-skill-chip peach">Agent 工作流</span>
+              <span class="about-skill-chip mint">Python</span>
+              <span class="about-skill-chip sky">策略优化</span>
+              <span class="about-skill-chip peach">Prompt 设计</span>
+              <span class="about-skill-chip mint">Stata</span>
               <span class="about-skill-chip mist">CET-6 572</span>
+              <span class="about-skill-chip sky">实验分析</span>
+              <span class="about-skill-chip peach">Vibe Coding</span>
+              <span class="about-skill-chip mint">Matlab</span>
+              <span class="about-skill-chip sky">项目推进</span>
+              <span class="about-skill-chip peach">快速原型</span>
+              <span class="about-skill-chip mint">Office</span>
               <span class="about-skill-chip sky">用户需求分析</span>
-              <span class="about-skill-chip sky">产品设计</span>
-              <span class="about-skill-chip sky">策略优化</span>
-              <span class="about-skill-chip sky">实验分析</span>
-              <span class="about-skill-chip sky">项目推进</span>
-              <span class="about-skill-chip mint">SQL</span>
-              <span class="about-skill-chip mint">Python</span>
-              <span class="about-skill-chip mint">Stata</span>
-              <span class="about-skill-chip mint">Matlab</span>
-              <span class="about-skill-chip mint">Office</span>
               <span class="about-skill-chip peach">大模型工具</span>
-              <span class="about-skill-chip peach">Agent 工作流</span>
-              <span class="about-skill-chip peach">Prompt 设计</span>
-              <span class="about-skill-chip peach">Vibe Coding</span>
-              <span class="about-skill-chip peach">快速原型</span>
+              <span class="about-skill-chip mint">SQL</span>
               <span class="about-skill-chip mist">IELTS 7.0</span>
+              <span class="about-skill-chip sky">产品设计</span>
+              <span class="about-skill-chip peach">Agent 工作流</span>
+              <span class="about-skill-chip mint">Python</span>
+              <span class="about-skill-chip sky">策略优化</span>
+              <span class="about-skill-chip peach">Prompt 设计</span>
+              <span class="about-skill-chip mint">Stata</span>
               <span class="about-skill-chip mist">CET-6 572</span>
+              <span class="about-skill-chip sky">实验分析</span>
+              <span class="about-skill-chip peach">Vibe Coding</span>
+              <span class="about-skill-chip mint">Matlab</span>
+              <span class="about-skill-chip sky">项目推进</span>
+              <span class="about-skill-chip peach">快速原型</span>
+              <span class="about-skill-chip mint">Office</span>
             </div>
           </div>
         </div>
@@ -1864,14 +1901,12 @@
   <!-- ====================== EDUCATION ====================== -->
   <section class="section education" id="education">
     <div class="edu-intro reveal">
-      <span class="section-eyebrow" style="margin: 0 auto;">Education</span>
-      <h2 class="section-title">教育经历</h2>
-      <p class="section-subtitle" style="margin: 0 auto;">从双学位到金融工程硕士，点击照片切换焦点。</p>
-    </div>
+<h2 class="section-title">教育经历</h2>
+</div>
 
     <div class="edu-board reveal" id="eduBoard" data-focus="ug">
       <div class="edu-copy-ug" data-focus="ug">
-        <span class="edu-kicker">Undergraduate</span>
+        <span class="edu-kicker">本科</span>
         <div class="edu-school">上海财经大学</div>
         <div class="edu-meta-line">投资学 · 信息与计算科学双学位</div>
         <div class="edu-meta-line">2022.09 — 2026.07</div>
@@ -1894,7 +1929,7 @@
       </div>
 
       <div class="edu-copy-ms" data-focus="ms">
-        <span class="edu-kicker">Master</span>
+        <span class="edu-kicker">硕士</span>
         <div class="edu-school">香港中文大学（深圳）</div>
         <div class="edu-meta-line">金融工程</div>
         <div class="edu-meta-line">2026.09 — 2027.07</div>
@@ -1906,18 +1941,18 @@
 <!-- ====================== EXPERIENCE ====================== -->
     <!-- ====================== EXPERIENCE ====================== -->
   <section class="section experience" id="experience">
-    <div class="reveal" style="text-align:center; margin-bottom: 12px;">
-      <span class="section-eyebrow" style="margin: 0 auto;">Experience</span>
-      <h2 class="section-title">实习经历</h2>
-      <p class="section-subtitle" style="margin: 0 auto;">底部转盘切换时间线，点击卡片翻面查看详情。</p>
-    </div>
+    <div class="reveal" style="text-align:center;">
+<h2 class="section-title">实习经历</h2>
+</div>
 
     <div class="exp-orbit reveal" id="expOrbit">
       <div class="exp-arc" id="expArc">
         <button type="button" class="exp-card" data-exp="xingye" data-index="0" aria-label="兴业证券实习经历">
           <div class="exp-card-inner">
             <div class="exp-card-face exp-card-front">
-              <div class="exp-card-cover is-placeholder"></div>
+              <div class="exp-card-cover">
+                <img src="assets/exp-xingye.jpg" alt="兴业证券" loading="lazy">
+              </div>
               <div class="exp-card-body">
                 <span class="exp-card-company">兴业证券</span>
                 <span class="exp-card-body-sep">·</span>
@@ -1931,7 +1966,9 @@
         <button type="button" class="exp-card" data-exp="shifeng" data-index="1" aria-label="石锋资产实习经历">
           <div class="exp-card-inner">
             <div class="exp-card-face exp-card-front">
-              <div class="exp-card-cover is-placeholder"></div>
+              <div class="exp-card-cover">
+                <img src="assets/exp-shifeng.jpg" alt="石锋资产" loading="lazy">
+              </div>
               <div class="exp-card-body">
                 <span class="exp-card-company">石锋资产</span>
                 <span class="exp-card-body-sep">·</span>
@@ -2023,19 +2060,16 @@
 
   <!-- ====================== EXPLORE ====================== -->
   <section class="section" id="explore" style="align-items:center;">
-    <div class="reveal" style="text-align:center; margin-bottom: 20px;">
-      <span class="section-eyebrow" style="margin: 0 auto;">Explore More</span>
-      <h2 class="section-title">探索更多</h2>
-      <p class="section-subtitle" style="margin: 0 auto;">研究、实践与校园经历的补充切片。</p>
-    </div>
+    <div class="reveal" style="text-align:center;">
+<h2 class="section-title">探索更多</h2>
+</div>
 
     <div class="explore-accordion reveal" id="exploreAccordion">
       <button type="button" class="explore-panel is-open" data-panel="research" aria-expanded="true">
         <div class="explore-panel-bg" aria-hidden="true"></div>
         <span class="explore-panel-label">研究经历</span>
         <div class="explore-panel-body">
-          <span class="explore-panel-kicker">Research</span>
-          <h3 class="explore-panel-title">研究经历</h3>
+<h3 class="explore-panel-title">研究经历</h3>
           <div class="explore-panel-points">
             <article class="explore-item">
               <div class="explore-item-title">城市工作时长对出生率的影响机制研究：基于中国城市数据的实证分析</div>
@@ -2060,8 +2094,7 @@
         <div class="explore-panel-bg" aria-hidden="true"></div>
         <span class="explore-panel-label">实践经历</span>
         <div class="explore-panel-body">
-          <span class="explore-panel-kicker">Practice</span>
-          <h3 class="explore-panel-title">实践经历</h3>
+<h3 class="explore-panel-title">实践经历</h3>
           <div class="explore-panel-points">
             <article class="explore-item">
               <div class="explore-item-title">数字化治理平台应用对城中村治理满意度的调查　组长</div>
@@ -2081,8 +2114,7 @@
         <div class="explore-panel-bg" aria-hidden="true"></div>
         <span class="explore-panel-label">校园经历</span>
         <div class="explore-panel-body">
-          <span class="explore-panel-kicker">Campus</span>
-          <h3 class="explore-panel-title">校园经历</h3>
+<h3 class="explore-panel-title">校园经历</h3>
           <div class="explore-panel-points">
             <article class="explore-item">
               <p class="explore-item-body">曾担任院学生会实践部负责人、法学会及创新创业中心管理人员。</p>
@@ -2101,54 +2133,17 @@
 
 <!-- ====================== CONTACT ====================== -->
   <section class="section contact" id="contact">
-    <div class="reveal">
-      <span class="section-eyebrow" style="margin: 0 auto;">Contact</span>
-      <h2 class="section-title" style="text-align:center;">联系方式</h2>
-      <p class="section-subtitle" style="margin: 0 auto 40px;">如果你对我的经历或能力感兴趣，欢迎通过以下方式联系我。</p>
-    </div>
-
-    <div class="contact-card reveal">
-      <h3 class="contact-title">随时与我<span class="rainbow-text">交流</span></h3>
-      <p class="contact-sub">无论是合作机会、学术讨论还是简单的问候，我都很期待收到你的消息。</p>
-
-      <div class="contact-methods">
-        <a href="mailto:2679299462@qq.com" class="contact-method">
-          <div class="contact-method-icon" style="background:var(--sky); color:var(--ink-2);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 5L2 7"></path></svg>
-          </div>
-          <div class="contact-method-info">
-            <span class="contact-method-label">邮箱</span>
-            <span class="contact-method-val">2679299462@qq.com</span>
-          </div>
+    <div class="contact-simple reveal">
+      <h2 class="section-title">联系方式</h2>
+      <div class="contact-lines">
+        <a href="mailto:2679299462@qq.com" class="contact-line">
+          <span class="contact-line-label">邮箱</span>
+          <span class="contact-line-val">2679299462@qq.com</span>
         </a>
-        <a href="tel:+8613798462822" class="contact-method">
-          <div class="contact-method-icon" style="background:var(--mint); color:#066b2b;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-          </div>
-          <div class="contact-method-info">
-            <span class="contact-method-label">手机号</span>
-            <span class="contact-method-val">(+86) 13798462822</span>
-          </div>
+        <a href="tel:+8613798462822" class="contact-line">
+          <span class="contact-line-label">电话</span>
+          <span class="contact-line-val">(+86) 13798462822</span>
         </a>
-      </div>
-
-      <div class="contact-socials">
-        <div class="contact-social placeholder">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"></rect><circle cx="8" cy="13" r="1"></circle><circle cx="16" cy="13" r="1"></circle></svg>
-          微信二维码
-        </div>
-        <div class="contact-social placeholder">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-          GitHub
-        </div>
-        <div class="contact-social placeholder">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-          LinkedIn
-        </div>
-        <div class="contact-social placeholder">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path></svg>
-          其他社交账号
-        </div>
       </div>
     </div>
   </section>
@@ -2156,7 +2151,6 @@
   <!-- ====================== FOOTER ====================== -->
   <footer class="footer">
     <div class="footer-text">
-      <span class="footer-dot"></span>
       <span>罗丹 · 个人主页</span>
       <span>·</span>
       <span>设计与开发 © 2026</span>
@@ -2177,8 +2171,8 @@
         role: '经济与金融研究院 · 行业研究实习生',
         time: '01/2024 – 05/2024',
         bullets: [
-          { t: '价格联动机制研究', d: '研究化工大宗商品价格的长期走势，基于供需端指标、资本市场表现和期货盘面数据，使用 Granger 因果检验与协整分析方法识别价格联动机制，结合脉冲响应函数刻画变量冲击路径，构建定量模型辅助行业趋势判断。' },
-          { t: '估值与研报支持', d: '跟踪重点化工企业财务数据与公告信息，提取 PE、PB、ROE 及成本结构等关键估值指标，结合横向可比公司分析与历史估值分位，运用回归模型与敏感性分析评估估值合理性，为 10 余篇深度研报的个股定价提供数据支持。' }
+          { t: '价格联动机制研究', d: '基于供需、资本市场与期货盘面，用 Granger 因果、协整与脉冲响应刻画化工大宗价格联动，辅助趋势判断。' },
+          { t: '估值与研报支持', d: '提取 PE/PB/ROE 与成本结构，做可比与历史分位、回归与敏感性分析，支撑 10 余篇深度研报定价。' }
         ]
       },
       shifeng: {
@@ -2186,8 +2180,8 @@
         role: '中台支持实习生',
         time: '06/2024 – 09/2024',
         bullets: [
-          { t: '策略梳理与路演支持', d: '深入掌握公司量化选股策略的核心逻辑与因子体系，整理策略框架，结合 Tableau 可视化产品的投资回报和基金经理的历史业绩，撰写面向客户的路演材料与策略介绍文案，协助销售团队开展了超过 10 场路演活动，提升了品牌知名度。' },
-          { t: '衍生品投研与回测', d: '协助产品经理开展期货衍生品相关投研工作，学习并掌握 Black-Scholes 定价模型与蒙特卡洛模拟方法；借助 JQdata 数据接口提取实时行情，参与构建基于买卖盘数据的回测框架，用于测算套利空间与策略可行性。' }
+          { t: '策略梳理与路演支持', d: '梳理量化选股逻辑与因子体系；用 Tableau 可视化回报与基金经理业绩，撰写路演材料，协助超 10 场路演。' },
+          { t: '衍生品投研与回测', d: '掌握 Black-Scholes 与蒙特卡洛；用 JQData 取行情，参与买卖盘回测框架测算套利空间。' }
         ]
       },
       dewu: {
@@ -2195,9 +2189,9 @@
         role: '商家运营',
         time: '08/2025 – 11/2025',
         bullets: [
-          { t: '商家维护与履约管理', d: '负责北美区域商家价格、折扣策略配置，依托数据分析输出优化方案，提升前台转化；跟进商家履约与售后全流程，定位发货延迟等风险，推动跨部门协同解决，熟悉供给侧履约链路与异常处置机制。' },
-          { t: '商品全周期运营', d: '深度参与商品盘货、匹配、定价、上架全流程，搭建 SKU 维度出价转化数据看板，定位运营卡点、优化商品上架效率，建立完整商品生命周期运营与指标拆解思维。' },
-          { t: '选品与市场洞察', d: '结合平台数据与外部流行趋势，分析商品 GMV、订单、客单价表现，对比不同供货渠道成本与品质；依托竞品价格、渗透率分析输出选品及供给优化方案，支撑大促阶段新品选型与业务决策。' }
+          { t: '商家维护与履约管理', d: '配置北美商家价格与折扣方案并做数据优化；跟进履约售后，定位发货延迟等风险并跨团队协同。' },
+          { t: '商品全周期运营', d: '参与盘货到上架全流程，搭建 SKU 出价转化看板，定位卡点、提升上架效率。' },
+          { t: '选品与市场洞察', d: '分析 GMV/订单/客单与渠道成本品质，结合竞品渗透输出大促选品建议。' }
         ]
       },
       shein: {
@@ -2205,9 +2199,9 @@
         role: 'C 端导购产品',
         time: '11/2025 – 03/2026',
         bullets: [
-          { t: '分人群导购产品设计与实验分析', d: '聚焦首页导购场景，融合算法标签与规则划分新老客、宝妈、大码女装等细分人群；针对金刚区、频道、导航等不同位置设计多套导购方案，统筹 A/B 实验分层、指标体系与参数配置，输出实验结论，持续迭代人群差异化导购策略。' },
-          { t: '核心流量场域承接分发优化', d: '负责首页、分类页等核心流量渠道迭代，结合用户需求调整资源位承接逻辑；对比测试不同素材展示效果，引入 AI 简化素材生产流程，优化多语言展示体验，推动中台配置系统升级，提升导购转化效率。' },
-          { t: '用户档案入口多场景迭代', d: '落地用户档案在首页、商详、列表页等多场景入口布局，优化页面信息采集扩充用户数据；在合规框架下完善弹窗、红点触达与频控策略，推动用户画像赋能搜索推荐，助力导购业务增长。' }
+          { t: '分人群导购与实验分析', d: '融合算法标签与规则划分新老客、宝妈、大码等人群；针对金刚区/频道/导航设计多套方案，统筹 A/B 分层与指标口径并沉淀结论。' },
+          { t: '核心流量场域优化', d: '迭代首页与分类页承接逻辑；对比素材效果，引入 AI 简化素材生产，优化多语言体验，推动中台配置升级。' },
+          { t: '用户档案入口迭代', d: '多场景落地档案入口并完善采集；合规下做弹窗/红点与频控，推动画像赋能搜推。' }
         ]
       },
       meituan: {
@@ -2215,10 +2209,10 @@
         role: '推荐策略产品',
         time: '03/2026 – 至今',
         bullets: [
-          { t: '信息流分发效率提升', d: '针对近店场景用户到店意图识别短板，挖掘短期行为特征，设计业务 Skill 构建个性化到店倾向评分并接入召回链路，拉动支付订单上涨 0.3%；搭建新店新品、特色去处标签体系，依托时令节日算法加权优化内容发现；完善 POI 长序列特征，强化模型识别用户线下兴趣的能力。' },
-          { t: '内容消费体验优化', d: '围绕内容有效阅读率偏低问题优化详情页，新增商户评价补充评论信息，借助 Prompt 规范 UGC 排版；在 POI 组件挂载团购优惠链路承接流量转化，实现大盘 GTV 提升 0.55%。' },
-          { t: '可分发内容时效治理', d: '优化内容生命周期管理，延长优质内容分发时效，为低质量内容建立淘汰机制，释放分发资源；最终带动 DAU 提升 0.218%、深度阅读 UV 提升 0.364%。' },
-          { t: 'AI 能力建设应用', d: '协同研发搭建推荐业务 AI Agent 工作流，主导需求澄清 Skill 设计，完成可行性评估与需求落地；沉淀数据分析、原型生成、指标监控等提效 Skill，搭建指标看板与异常告警，加快策略迭代速度。' }
+          { t: '信息流分发效率提升', d: '近店意图评分接入召回，建设新店新品外展标签与时令提权，完善 POI 长序列；支付订单 +0.3%。' },
+          { t: '内容消费体验优化', d: '优化详情页信息密度与 UGC 排版，POI 下挂团购承接转化；大盘 GTV +0.55%。' },
+          { t: '可分发内容时效治理', d: '延长优质内容时效、低质退场释放资源；DAU +0.218%，深度阅读 UV +0.364%。' },
+          { t: 'AI 能力建设应用', d: '共建推荐 Agent 工作流，主导需求澄清 Skill，沉淀分析/原型/监控提效能力。' }
         ]
       }
     };
@@ -2365,14 +2359,6 @@
           homePhotoWrap.style.transform = 'translateY(' + (sy * 0.15) + 'px)';
         }
       }
-
-      // Section divider visibility
-      sections.forEach(function(s) {
-        var rect = s.getBoundingClientRect();
-        if (rect.top < winH * 0.5 && rect.bottom > winH * 0.3) {
-          s.classList.add('visible-divider');
-        }
-      });
     }
 
     var ticking = false;
@@ -2513,10 +2499,11 @@
         if (!activeShot) return;
         var cRect = collage.getBoundingClientRect();
         var sRect = activeShot.getBoundingClientRect();
-        finder.style.top = (sRect.top - cRect.top) + 'px';
-        finder.style.left = (sRect.left - cRect.left) + 'px';
-        finder.style.width = sRect.width + 'px';
-        finder.style.height = sRect.height + 'px';
+        var pad = 16;
+        finder.style.top = (sRect.top - cRect.top - pad) + 'px';
+        finder.style.left = (sRect.left - cRect.left - pad) + 'px';
+        finder.style.width = (sRect.width + pad * 2) + 'px';
+        finder.style.height = (sRect.height + pad * 2) + 'px';
       }
 
       function setFocus(next) {
@@ -2589,7 +2576,7 @@
       var prevBtn = document.getElementById('expPrev');
       var nextBtn = document.getElementById('expNext');
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var active = 0;
+      var active = 2; /* 得物居中起步 */
       var dwellMs = 2000;
       var autoTimer = null;
       var userPaused = false;
@@ -2647,14 +2634,14 @@
           card.style.margin = '';
 
           var abs = Math.abs(offset);
-          var x = offset * 230;
-          var y = abs * 46 + (offset === 0 ? -14 : 18);
-          var rot = offset * 11;
-          var scale = offset === 0 ? 1.05 : Math.max(0.7, 0.88 - abs * 0.07);
-          var opacity = abs > 2 ? 0 : (offset === 0 ? 1 : 0.62);
+          var x = offset * 218;
+          var y = abs * 26 + (offset === 0 ? -6 : 14);
+          var rot = offset * 10;
+          var scale = offset === 0 ? 1.03 : Math.max(0.74, 0.9 - abs * 0.06);
+          var opacity = abs > 2 ? 0 : (offset === 0 ? 1 : 0.9);
           card.style.transform = 'translate(' + x + 'px, ' + y + 'px) rotate(' + rot + 'deg) scale(' + scale + ')';
           card.style.zIndex = String(20 - abs);
-          card.style.filter = offset === 0 ? 'none' : 'grayscale(1)';
+          card.style.filter = 'none';
           card.style.opacity = String(opacity);
         });
 
@@ -2679,6 +2666,7 @@
       function stopAuto() {
         if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
       }
+      /* 向左轮播：下一张（时间线更晚）进入中心，当前卡移向左侧 */
       function startAuto() {
         stopAuto();
         if (reduceMotion || userPaused || !sectionVisible) return;
@@ -2709,7 +2697,11 @@
           entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               sectionVisible = true;
-              if (leftSection) { userPaused = false; leftSection = false; }
+              if (leftSection) {
+                userPaused = false;
+                leftSection = false;
+                setActive(2); /* 再次进入仍从得物居中起步，停留 2s 后向左轮播 */
+              }
               orbit.classList.add('is-ready');
               startAuto();
             } else {
@@ -2757,19 +2749,59 @@
       }
     })();
 
-    // ========================================
-    // Download resume placeholder
-    // ========================================
-    var dlBtn = document.getElementById('downloadResume');
-    if (dlBtn) {
-      dlBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        // Placeholder - no actual file yet
-        var original = dlBtn.innerHTML;
-        dlBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> 简历准备中';
-        setTimeout(function() { dlBtn.innerHTML = original; }, 2000);
+
+    // Cursor blue glow trail
+    (function initCursorGlow() {
+      var layer = document.getElementById('cursorGlowLayer');
+      if (!layer) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (window.matchMedia('(pointer: coarse)').matches) return;
+
+      var COUNT = 3;
+      var dots = [];
+      for (var i = 0; i < COUNT; i++) {
+        var el = document.createElement('div');
+        el.className = 'cursor-glow';
+        var scale = 1 - i * 0.18;
+        var alpha = Math.max(0.1, 0.26 - i * 0.07);
+        el.style.width = (72 * scale) + 'px';
+        el.style.height = (72 * scale) + 'px';
+        el.style.marginLeft = (-36 * scale) + 'px';
+        el.style.marginTop = (-36 * scale) + 'px';
+        el.style.background = 'radial-gradient(circle, rgba(0,111,218,' + alpha + ') 0%, rgba(0,111,218,' + (alpha * 0.35) + ') 45%, rgba(0,111,218,0) 75%)';
+        layer.appendChild(el);
+        dots.push({ el: el, x: -200, y: -200 });
+      }
+
+      var mouse = { x: -200, y: -200 };
+      document.addEventListener('mousemove', function(e) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        layer.classList.add('is-on');
+      }, { passive: true });
+      document.addEventListener('mouseleave', function() {
+        layer.classList.remove('is-on');
       });
-    }
+
+      function tick() {
+        var x = mouse.x;
+        var y = mouse.y;
+        dots.forEach(function(d, i) {
+          var ease = 0.45 - i * 0.1;
+          d.x += (x - d.x) * ease;
+          d.y += (y - d.y) * ease;
+          d.el.style.transform = 'translate3d(' + d.x + 'px,' + d.y + 'px,0)';
+          x = d.x;
+          y = d.y;
+        });
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+
+    // ========================================
+    // Download resume — native link to assets/resume.pdf
+    // ========================================
 
   })();
   </script>
