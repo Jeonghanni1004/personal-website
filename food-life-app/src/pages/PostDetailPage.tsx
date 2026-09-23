@@ -49,7 +49,7 @@ export default function PostDetailPage() {
 
   return (
     <PageTransition>
-      <div className="page pb-32">
+      <div className="page">
         <PageHeader title="详情" />
         <div className="flex items-center gap-3 mb-4">
           <SafeImage
@@ -136,9 +136,7 @@ export default function PostDetailPage() {
           )}
         </div>
 
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5 py-3 bg-cream/95 backdrop-blur border-t border-border flex gap-2"
-          style={{ paddingBottom: 'calc(12px + env(safe-area-inset-bottom))' }}
-        >
+        <div className="sticky bottom-0 -mx-5 mt-4 px-5 py-3 bg-cream/95 backdrop-blur border-t border-border flex gap-2">
           <input
             value={text}
             onChange={(e) => setText(e.target.value)}

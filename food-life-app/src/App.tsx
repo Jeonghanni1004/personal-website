@@ -16,19 +16,10 @@ import ProfileSavedPage from './pages/ProfileSavedPage';
 import ProfilePostsPage from './pages/ProfilePostsPage';
 import SettingsPage from './pages/SettingsPage';
 
-const HIDE_NAV = [
-  '/cook',
-  '/phone-eat',
-  '/post/create',
-  '/diary/photos',
-  '/settings',
-];
-
+/** 仅全屏沉浸页隐藏底栏 */
 function shouldHideNav(pathname: string) {
   if (pathname.startsWith('/diary/') && pathname !== '/diary/photos') return true;
-  if (pathname.startsWith('/community/')) return true;
-  if (pathname.startsWith('/profile/')) return true;
-  return HIDE_NAV.some((p) => pathname === p || pathname.startsWith(p + '/'));
+  return false;
 }
 
 export default function App() {
@@ -38,26 +29,28 @@ export default function App() {
   return (
     <div className="app-frame">
       <div className="app-shell">
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/random" element={<Navigate to="/" replace />} />
-            <Route path="/cook" element={<CookPage />} />
-            <Route path="/phone-eat" element={<PhoneEatPage />} />
-            <Route path="/community" element={<CommunityPage />} />
-            <Route path="/community/:postId" element={<PostDetailPage />} />
-            <Route path="/post/create" element={<CreatePostPage />} />
-            <Route path="/diary" element={<DiaryPage />} />
-            <Route path="/diary/photos" element={<DiaryPhotosPage />} />
-            <Route path="/diary/:date" element={<DiaryStoryPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/profile/recipes" element={<ProfileRecipesPage />} />
-            <Route path="/profile/saved" element={<ProfileSavedPage />} />
-            <Route path="/profile/posts" element={<ProfilePostsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </AnimatePresence>
+        <div className={hideNav ? 'app-content app-content--flush' : 'app-content'}>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/random" element={<Navigate to="/" replace />} />
+              <Route path="/cook" element={<CookPage />} />
+              <Route path="/phone-eat" element={<PhoneEatPage />} />
+              <Route path="/community" element={<CommunityPage />} />
+              <Route path="/community/:postId" element={<PostDetailPage />} />
+              <Route path="/post/create" element={<CreatePostPage />} />
+              <Route path="/diary" element={<DiaryPage />} />
+              <Route path="/diary/photos" element={<DiaryPhotosPage />} />
+              <Route path="/diary/:date" element={<DiaryStoryPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/profile/recipes" element={<ProfileRecipesPage />} />
+              <Route path="/profile/saved" element={<ProfileSavedPage />} />
+              <Route path="/profile/posts" element={<ProfilePostsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AnimatePresence>
+        </div>
         {!hideNav && <BottomNav />}
       </div>
     </div>

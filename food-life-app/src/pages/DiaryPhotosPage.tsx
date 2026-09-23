@@ -33,10 +33,7 @@ export default function DiaryPhotosPage() {
         <ImageGrid entries={entries} selected={selected} onToggle={toggle} />
 
         {selected.size > 0 && (
-          <div
-            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5 py-4 bg-cream/95 backdrop-blur border-t border-border z-40"
-            style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom))' }}
-          >
+          <div className="sticky bottom-0 px-5 py-4 bg-cream/95 backdrop-blur border-t border-border z-40">
             <div className="flex items-center justify-between gap-3">
               <p className="text-sm font-medium">已选择 {selected.size} 张</p>
               <button

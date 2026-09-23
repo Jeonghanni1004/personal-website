@@ -91,10 +91,7 @@ export default function CreatePostPage() {
             </button>
             <ImageGrid entries={entries} selected={selected} onToggle={toggle} />
             {selected.size > 0 && (
-              <div
-                className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5 py-4 bg-cream/95 backdrop-blur border-t border-border"
-                style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom))' }}
-              >
+              <div className="sticky bottom-0 -mx-5 mt-4 px-5 py-4 bg-cream/95 backdrop-blur border-t border-border">
                 <button type="button" onClick={confirmPick} className="btn-primary w-full py-3.5">
                   已选择 {selected.size} 张，下一步
                 </button>

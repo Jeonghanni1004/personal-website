@@ -68,10 +68,7 @@ export default function DiaryPage() {
     <PageTransition>
       <div className="page">
         <header className="flex items-center justify-between mb-4 pt-2">
-          <div>
-            <h1 className="font-display text-3xl font-bold">美食日记</h1>
-            <p className="text-ink-muted text-sm mt-0.5">我的吃饭日历</p>
-          </div>
+          <p className="text-ink-muted text-sm">我的吃饭日历</p>
           <div className="flex items-center gap-2">
             <button
               type="button"

@@ -34,10 +34,7 @@ export default function CommunityPage() {
     <PageTransition>
       <div className="page">
         <header className="flex items-center justify-between mb-5 pt-2">
-          <div>
-            <h1 className="font-display text-3xl font-bold">饭圈</h1>
-            <p className="text-ink-muted text-sm mt-0.5">今天大家都吃了什么</p>
-          </div>
+          <p className="text-ink-muted text-sm">今天大家都吃了什么</p>
           <Link
             to="/post/create"
             className="w-11 h-11 rounded-full bg-tomato text-white flex items-center justify-center shadow-card"

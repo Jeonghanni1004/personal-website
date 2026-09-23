@@ -56,11 +56,14 @@ body {
 .app-shell {
   width: 100%;
   max-width: 430px;
-  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
   background: var(--color-cream);
   position: relative;
   box-shadow: 0 0 0 1px rgba(45, 42, 38, 0.04), 0 24px 80px rgba(45, 42, 38, 0.12);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 480px) {
@@ -73,9 +76,30 @@ body {
   }
 }
 
+.app-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content--flush {
+  flex: 1;
+  min-height: 0;
+}
+
+.app-content > * {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .page {
-  min-height: 100dvh;
-  padding: calc(16px + env(safe-area-inset-top)) 20px calc(100px + env(safe-area-inset-bottom));
+  flex: 1;
+  min-height: 0;
+  padding: calc(16px + env(safe-area-inset-top)) 20px 24px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -83,6 +107,13 @@ body {
 .page-flush {
   padding-left: 0;
   padding-right: 0;
+}
+
+.bottom-nav {
+  flex-shrink: 0;
+  z-index: 50;
+  padding-top: 4px;
+  background: linear-gradient(to top, var(--color-cream) 60%, transparent);
 }
 
 .font-display {

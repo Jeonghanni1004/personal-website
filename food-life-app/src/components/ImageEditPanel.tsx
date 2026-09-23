@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { RotateCw, RotateCcw, Eraser, Minus, Plus } from 'lucide-react';
+import { RotateCw, RotateCcw, Eraser, Minus, Plus, Type, Pencil } from 'lucide-react';
 import { cn } from '../utils/meal';
-import { MOCK_CAMERA_IMAGES } from '../api';
+import { MOCK_CAMERA_IMAGES } from '../data/mockImages';
 
 const FILTERS = [
   { id: 'none', label: '原图', css: 'none' },
@@ -23,6 +23,15 @@ const DOODLE_COLORS = ['#E85D4C', '#F4A261', '#E9C46A', '#2A9D8F', '#FFFFFF', '#
 
 type PrimaryTab = 'adjust' | 'mark';
 type AdjustTab = 'filter' | 'crop' | 'rotate';
+type MarkMode = 'draw' | 'text';
+
+interface TextMark {
+  id: string;
+  text: string;
+  x: number; // 0–1 relative
+  y: number;
+  color: string;
+}
 
 interface Props {
   image: string;
@@ -30,8 +39,11 @@ interface Props {
 }
 
 export default function ImageEditPanel({ image, onNext }: Props) {
+  const [src, setSrc] = useState(image || MOCK_CAMERA_IMAGES[0]);
+  const [imgReady, setImgReady] = useState(false);
   const [primary, setPrimary] = useState<PrimaryTab>('adjust');
   const [adjustTab, setAdjustTab] = useState<AdjustTab>('filter');
+  const [markMode, setMarkMode] = useState<MarkMode>('draw');
   const [filter, setFilter] = useState('none');
   const [rotation, setRotation] = useState(0);
   const [cropRatio, setCropRatio] = useState('free');
@@ -39,6 +51,9 @@ export default function ImageEditPanel({ image, onNext }: Props) {
   const [doodleColor, setDoodleColor] = useState(DOODLE_COLORS[0]);
   const [brushSize, setBrushSize] = useState(4);
   const [drawing, setDrawing] = useState(false);
+  const [texts, setTexts] = useState<TextMark[]>([]);
+  const [draftText, setDraftText] = useState('好吃！');
+  const [selectedTextId, setSelectedTextId] = useState<string | null>(null);
 
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -48,27 +63,46 @@ export default function ImageEditPanel({ image, onNext }: Props) {
   const ratio = CROP_RATIOS.find((r) => r.id === cropRatio)?.value || 0;
 
   useEffect(() => {
+    setSrc(image || MOCK_CAMERA_IMAGES[0]);
+    setImgReady(false);
+  }, [image]);
+
+  useEffect(() => {
     const canvas = canvasRef.current;
     const stage = stageRef.current;
     if (!canvas || !stage) return;
-    const { width, height } = stage.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    const ctx = canvas.getContext('2d');
-    if (ctx) ctx.scale(dpr, dpr);
-  }, [image, cropRatio]);
+    const resize = () => {
+      const { width, height } = stage.getBoundingClientRect();
+      if (width < 2 || height < 2) return;
+      const dpr = window.devicePixelRatio || 1;
+      const prev = canvas.toDataURL();
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // restore doodle after resize if any
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, width, height);
+      img.src = prev;
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(stage);
+    return () => ro.disconnect();
+  }, [src, cropRatio]);
 
   const clearDoodle = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
-    ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
+    const stage = stageRef.current;
+    const { width = 0, height = 0 } = stage?.getBoundingClientRect() || {};
+    ctx.clearRect(0, 0, width, height);
+    setTexts([]);
+    setSelectedTextId(null);
   };
 
   const pos = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -77,7 +111,7 @@ export default function ImageEditPanel({ image, onNext }: Props) {
   };
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (primary !== 'mark') return;
+    if (primary !== 'mark' || markMode !== 'draw') return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     setDrawing(true);
@@ -92,7 +126,7 @@ export default function ImageEditPanel({ image, onNext }: Props) {
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!drawing || primary !== 'mark') return;
+    if (!drawing || primary !== 'mark' || markMode !== 'draw') return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     const { x, y } = pos(e);
@@ -102,48 +136,83 @@ export default function ImageEditPanel({ image, onNext }: Props) {
 
   const onPointerUp = () => setDrawing(false);
 
+  const onStageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (primary !== 'mark' || markMode !== 'text') return;
+    const stage = stageRef.current;
+    if (!stage) return;
+    const rect = stage.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const text = draftText.trim() || '好吃！';
+    const id = `t-${Date.now()}`;
+    setTexts((prev) => [...prev, { id, text, x, y, color: doodleColor }]);
+    setSelectedTextId(id);
+  };
+
   const exportEdited = async () => {
     const stage = stageRef.current;
-    const img = imgRef.current;
-    if (!stage || !img) {
-      onNext(image);
+    const imgEl = imgRef.current;
+    if (!stage) {
+      onNext(src);
       return;
     }
 
-    try {
-      const w = 720;
-      const h = Math.round(w * (4 / 3));
-      const out = document.createElement('canvas');
-      out.width = w;
-      out.height = h;
-      const ctx = out.getContext('2d');
-      if (!ctx) {
-        onNext(image);
-        return;
-      }
+    const rect = stage.getBoundingClientRect();
+    const w = Math.max(360, Math.round(rect.width * 2));
+    const h = Math.max(480, Math.round(rect.height * 2));
+    const out = document.createElement('canvas');
+    out.width = w;
+    out.height = h;
+    const ctx = out.getContext('2d');
+    if (!ctx) {
+      onNext(src);
+      return;
+    }
 
-      ctx.fillStyle = '#F3EDE4';
-      ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#F3EDE4';
+    ctx.fillRect(0, 0, w, h);
+
+    try {
       ctx.save();
       ctx.filter = filterCss === 'none' ? 'none' : filterCss;
       ctx.translate(w / 2, h / 2);
       ctx.rotate((rotation * Math.PI) / 180);
       const scale = zoom;
-      const iw = img.naturalWidth || w;
-      const ih = img.naturalHeight || h;
-      const cover = Math.max(w / iw, h / ih) * scale;
-      ctx.drawImage(img, (-iw * cover) / 2, (-ih * cover) / 2, iw * cover, ih * cover);
-      ctx.restore();
-
-      const doodle = canvasRef.current;
-      if (doodle && doodle.width > 0) {
-        ctx.drawImage(doodle, 0, 0, w, h);
+      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+        const iw = imgEl.naturalWidth;
+        const ih = imgEl.naturalHeight;
+        const cover = Math.max(w / iw, h / ih) * scale;
+        ctx.drawImage(imgEl, (-iw * cover) / 2, (-ih * cover) / 2, iw * cover, ih * cover);
       }
-
-      onNext(out.toDataURL('image/jpeg', 0.9));
+      ctx.restore();
     } catch {
-      // CORS 等导致无法导出时，仍用原图继续流程
-      onNext(image);
+      // ignore draw errors
+    }
+
+    const doodle = canvasRef.current;
+    if (doodle && doodle.width > 0) {
+      try {
+        ctx.drawImage(doodle, 0, 0, w, h);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    texts.forEach((t) => {
+      ctx.fillStyle = t.color;
+      ctx.font = `bold ${Math.round(w * 0.055)}px "Outfit", system-ui, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.35)';
+      ctx.shadowBlur = 6;
+      ctx.fillText(t.text, t.x * w, t.y * h);
+      ctx.shadowBlur = 0;
+    });
+
+    try {
+      onNext(out.toDataURL('image/jpeg', 0.92));
+    } catch {
+      onNext(src);
     }
   };
 
@@ -158,38 +227,74 @@ export default function ImageEditPanel({ image, onNext }: Props) {
         ref={stageRef}
         className="relative rounded-[28px] overflow-hidden mb-4 bg-cream-dark mx-auto w-full max-h-[52vh]"
         style={aspectStyle}
+        onClick={onStageClick}
       >
+        {!imgReady && (
+          <div className="absolute inset-0 flex items-center justify-center text-ink-muted text-sm z-[5]">
+            图片加载中…
+          </div>
+        )}
         <img
           ref={imgRef}
-          src={image}
+          src={src}
           alt="预览"
-          crossOrigin="anonymous"
           className="absolute inset-0 w-full h-full object-cover origin-center"
           style={{
             filter: filterCss,
             transform: `rotate(${rotation}deg) scale(${zoom})`,
+            opacity: imgReady ? 1 : 0,
           }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = MOCK_CAMERA_IMAGES[0];
+          onLoad={() => setImgReady(true)}
+          onError={() => {
+            const fallback = MOCK_CAMERA_IMAGES[0];
+            if (src !== fallback) {
+              setSrc(fallback);
+              setImgReady(false);
+            } else {
+              setImgReady(true);
+            }
           }}
         />
         <canvas
           ref={canvasRef}
           className={cn(
-            'absolute inset-0 w-full h-full touch-none',
-            primary === 'mark' ? 'z-10 cursor-crosshair' : 'z-10 pointer-events-none',
+            'absolute inset-0 w-full h-full touch-none z-10',
+            primary === 'mark' && markMode === 'draw'
+              ? 'cursor-crosshair'
+              : 'pointer-events-none',
           )}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         />
+        {texts.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className={cn(
+              'absolute z-20 px-2 py-1 rounded-lg text-sm font-bold -translate-x-1/2 -translate-y-1/2 whitespace-nowrap',
+              selectedTextId === t.id && 'ring-2 ring-white',
+            )}
+            style={{
+              left: `${t.x * 100}%`,
+              top: `${t.y * 100}%`,
+              color: t.color,
+              textShadow: '0 1px 4px rgba(0,0,0,0.45)',
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedTextId(t.id);
+            }}
+          >
+            {t.text}
+          </button>
+        ))}
         {adjustTab === 'crop' && primary === 'adjust' && (
           <div className="absolute inset-3 border-2 border-white/80 rounded-2xl pointer-events-none z-20 shadow-[0_0_0_9999px_rgba(0,0,0,0.28)]" />
         )}
       </div>
 
-      {/* 一级 Tab */}
       <div className="flex gap-2 mb-3 p-1 bg-cream-dark rounded-full">
         {(
           [
@@ -211,7 +316,6 @@ export default function ImageEditPanel({ image, onNext }: Props) {
         ))}
       </div>
 
-      {/* 二级 Tab / 工具 */}
       {primary === 'adjust' && (
         <>
           <div className="flex gap-2 mb-3 overflow-x-auto pb-0.5">
@@ -324,17 +428,54 @@ export default function ImageEditPanel({ image, onNext }: Props) {
 
       {primary === 'mark' && (
         <div className="mb-4 space-y-3">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setMarkMode('draw')}
+              className={cn(
+                'flex-1 py-2.5 rounded-full text-sm font-medium flex items-center justify-center gap-1.5 border',
+                markMode === 'draw'
+                  ? 'bg-tomato text-white border-tomato'
+                  : 'bg-card border-border text-ink-muted',
+              )}
+            >
+              <Pencil size={14} /> 涂鸦
+            </button>
+            <button
+              type="button"
+              onClick={() => setMarkMode('text')}
+              className={cn(
+                'flex-1 py-2.5 rounded-full text-sm font-medium flex items-center justify-center gap-1.5 border',
+                markMode === 'text'
+                  ? 'bg-tomato text-white border-tomato'
+                  : 'bg-card border-border text-ink-muted',
+              )}
+            >
+              <Type size={14} /> 文字
+            </button>
+          </div>
+
           <div className="flex items-center gap-2">
             {DOODLE_COLORS.map((c) => (
               <button
                 key={c}
                 type="button"
-                onClick={() => setDoodleColor(c)}
+                onClick={() => {
+                  setDoodleColor(c);
+                  if (selectedTextId) {
+                    setTexts((prev) =>
+                      prev.map((t) => (t.id === selectedTextId ? { ...t, color: c } : t)),
+                    );
+                  }
+                }}
                 className={cn(
                   'w-8 h-8 rounded-full border-2 shrink-0',
                   doodleColor === c ? 'border-ink scale-110' : 'border-transparent',
                 )}
-                style={{ background: c, boxShadow: c === '#FFFFFF' ? 'inset 0 0 0 1px #EDE6DC' : undefined }}
+                style={{
+                  background: c,
+                  boxShadow: c === '#FFFFFF' ? 'inset 0 0 0 1px #EDE6DC' : undefined,
+                }}
                 aria-label={`颜色 ${c}`}
               />
             ))}
@@ -346,17 +487,41 @@ export default function ImageEditPanel({ image, onNext }: Props) {
               <Eraser size={14} /> 清除
             </button>
           </div>
-          <div className="flex items-center gap-3 px-1">
-            <span className="text-xs text-ink-muted shrink-0">粗细</span>
-            <input
-              type="range"
-              min={2}
-              max={16}
-              value={brushSize}
-              onChange={(e) => setBrushSize(Number(e.target.value))}
-              className="flex-1 accent-tomato"
-            />
-          </div>
+
+          {markMode === 'draw' && (
+            <div className="flex items-center gap-3 px-1">
+              <span className="text-xs text-ink-muted shrink-0">粗细</span>
+              <input
+                type="range"
+                min={2}
+                max={16}
+                value={brushSize}
+                onChange={(e) => setBrushSize(Number(e.target.value))}
+                className="flex-1 accent-tomato"
+              />
+            </div>
+          )}
+
+          {markMode === 'text' && (
+            <div className="space-y-2">
+              <input
+                value={draftText}
+                onChange={(e) => {
+                  setDraftText(e.target.value);
+                  if (selectedTextId) {
+                    setTexts((prev) =>
+                      prev.map((t) =>
+                        t.id === selectedTextId ? { ...t, text: e.target.value || '好吃！' } : t,
+                      ),
+                    );
+                  }
+                }}
+                placeholder="输入文字，再点图片放置"
+                className="w-full px-4 py-2.5 rounded-2xl border border-border bg-card outline-none focus:border-tomato text-sm"
+              />
+              <p className="text-xs text-ink-muted">点一下预览图即可放下文字</p>
+            </div>
+          )}
         </div>
       )}
 

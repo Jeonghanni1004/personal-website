@@ -24,8 +24,8 @@ export default function DiaryStory({ entries, date, onClose }: Props) {
 
   const goNext = useCallback(() => {
     if (index < entries.length - 1) setIndex((i) => i + 1);
-    else onClose();
-  }, [index, entries.length, onClose]);
+    // 最后一张停留，不自动关闭
+  }, [index, entries.length]);
 
   const goPrev = useCallback(() => {
     if (index > 0) setIndex((i) => i - 1);
@@ -33,11 +33,13 @@ export default function DiaryStory({ entries, date, onClose }: Props) {
 
   useEffect(() => {
     if (timerRef.current) window.clearTimeout(timerRef.current);
+    // 最后一张不再自动跳转/关闭
+    if (index >= entries.length - 1) return;
     timerRef.current = window.setTimeout(goNext, duration);
     return () => {
       if (timerRef.current) window.clearTimeout(timerRef.current);
     };
-  }, [index, goNext]);
+  }, [index, goNext, entries.length]);
 
   if (!current) {
     return (

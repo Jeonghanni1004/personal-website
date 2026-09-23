@@ -32,7 +32,6 @@ export default function ProfilePage() {
     <PageTransition>
       <div className="page">
         <header className="pt-2 mb-6">
-          <h1 className="font-display text-3xl font-bold mb-6">我的</h1>
           <div className="flex items-center gap-4">
             <SafeImage
               src={user.avatar}

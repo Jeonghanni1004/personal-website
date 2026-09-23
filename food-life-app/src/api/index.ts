@@ -219,9 +219,4 @@ export async function mockRecognizeDish(): Promise<string> {
   return names[Math.floor(Math.random() * names.length)];
 }
 
-export const MOCK_CAMERA_IMAGES = [
-  'https://images.unsplash.com/photo-1603133879110-a1d2e0f1c0a1?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80',
-];
+export { MOCK_CAMERA_IMAGES } from '../data/mockImages';
