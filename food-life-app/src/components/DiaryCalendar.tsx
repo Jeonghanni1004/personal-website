@@ -8,6 +8,9 @@ import {
   format,
   isSameMonth,
   isToday,
+  eachMonthOfInterval,
+  startOfYear,
+  endOfYear,
 } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import type { DiaryEntry } from '../types';
@@ -90,6 +93,126 @@ export default function DiaryCalendar({ month, entries, onSelectDate }: Props) {
         })}
       </div>
       <p className="sr-only">{format(month, 'yyyy年M月', { locale: zhCN })}</p>
+    </div>
+  );
+}
+
+/** 年视图：12 个月缩略 */
+export function DiaryYearView({
+  year,
+  entries,
+  onSelectMonth,
+}: {
+  year: Date;
+  entries: DiaryEntry[];
+  onSelectMonth: (month: Date) => void;
+}) {
+  const months = eachMonthOfInterval({
+    start: startOfYear(year),
+    end: endOfYear(year),
+  });
+
+  const countByMonth = useMemo(() => {
+    const map = new Map<string, { count: number; thumb?: string }>();
+    entries.forEach((e) => {
+      const key = e.date.slice(0, 7);
+      const cur = map.get(key) || { count: 0 };
+      cur.count += 1;
+      if (!cur.thumb) cur.thumb = e.image;
+      map.set(key, cur);
+    });
+    return map;
+  }, [entries]);
+
+  return (
+    <div className="grid grid-cols-3 gap-3">
+      {months.map((m) => {
+        const key = format(m, 'yyyy-MM');
+        const info = countByMonth.get(key);
+        return (
+          <button
+            key={key}
+            type="button"
+            onClick={() => onSelectMonth(m)}
+            className="card p-0 overflow-hidden text-left aspect-square relative"
+          >
+            {info?.thumb ? (
+              <SafeImage src={info.thumb} className="absolute inset-0 w-full h-full" alt="" />
+            ) : (
+              <div className="absolute inset-0 bg-cream-dark" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-2.5 text-white">
+              <p className="font-display font-semibold text-lg leading-none">
+                {format(m, 'M月', { locale: zhCN })}
+              </p>
+              <p className="text-[11px] opacity-90 mt-1">
+                {info?.count ? `${info.count} 顿` : '还没记录'}
+              </p>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** 日视图：单日时间线 */
+export function DiaryDayView({
+  day,
+  entries,
+  onSelectDate,
+}: {
+  day: Date;
+  entries: DiaryEntry[];
+  onSelectDate: (date: string) => void;
+}) {
+  const key = format(day, 'yyyy-MM-dd');
+  const dayEntries = entries
+    .filter((e) => e.date === key)
+    .sort((a, b) => a.time.localeCompare(b.time));
+
+  return (
+    <div>
+      <div className="flex items-baseline gap-2 mb-4">
+        <h3 className="font-display font-semibold text-xl">
+          {format(day, 'M月d日', { locale: zhCN })}
+        </h3>
+        <span className="text-ink-muted text-sm">
+          {format(day, 'EEEE', { locale: zhCN })}
+          {isToday(day) ? ' · 今天' : ''}
+        </span>
+      </div>
+      {dayEntries.length === 0 ? (
+        <div className="card p-8 text-center text-ink-muted">
+          <p className="font-display text-lg mb-1">这一天还没吃东西？</p>
+          <p className="text-sm">去记录一顿吧。</p>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => onSelectDate(key)}
+          className="w-full text-left space-y-3"
+        >
+          {dayEntries.map((e) => (
+            <div key={e.id} className="card p-3 flex gap-3 items-center">
+              <span className="text-ink-muted text-sm w-12 shrink-0 tabular-nums">{e.time}</span>
+              <SafeImage
+                src={e.image}
+                className="w-16 h-16 rounded-2xl shrink-0"
+                alt={e.foodName}
+              />
+              <div className="min-w-0">
+                <p className="text-xs text-ink-muted">{e.mealType}</p>
+                <p className="font-semibold truncate">{e.foodName}</p>
+                {e.note && (
+                  <p className="text-xs text-ink-muted truncate mt-0.5">{e.note}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </button>
+      )}
     </div>
   );
 }

@@ -45,7 +45,7 @@ export const SEED_POSTS: Post[] = [
   {
     id: 'p3',
     author: USERS[3],
-    images: [img('photo-1529042410759-befb1204b468')],
+    images: [img('photo-1476224203421-9ac39bcb3327')],
     content: '红烧肉炖了两个小时，肥而不腻。今天也是自己做饭的一天。',
     foodName: '红烧肉',
     location: '家里',
@@ -133,7 +133,7 @@ export const SEED_POSTS: Post[] = [
   {
     id: 'p10',
     author: USERS[3],
-    images: [img('photo-1603133879110-a1d2e0f1c0a1')],
+    images: [img('photo-1482049016688-2d3e1b311543')],
     content: '不会做饭的人第一步：学会番茄炒蛋。今天练成了。',
     foodName: '番茄炒蛋',
     location: '家里',

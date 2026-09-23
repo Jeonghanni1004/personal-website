@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import PageTransition from '../components/PageTransition';
 import RecipeCard from '../components/RecipeCard';
-import { getRecipes } from '../api';
+import { getRecipes, unsaveRecipe } from '../api';
 import type { Recipe } from '../types';
 
 export default function ProfileRecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
+  const refresh = () => getRecipes().then((r) => setRecipes(r.filter((x) => x.saved)));
+
   useEffect(() => {
-    getRecipes().then((r) => setRecipes(r.filter((x) => x.saved)));
+    refresh();
   }, []);
 
   return (
@@ -21,7 +23,16 @@ export default function ProfileRecipesPage() {
             还没有收藏的菜谱，去做点好吃的吧。
           </p>
         ) : (
-          recipes.map((r) => <RecipeCard key={r.id} recipe={r} />)
+          recipes.map((r) => (
+            <RecipeCard
+              key={r.id}
+              recipe={r}
+              onSave={async () => {
+                await unsaveRecipe(r.id);
+                refresh();
+              }}
+            />
+          ))
         )}
       </div>
     </PageTransition>

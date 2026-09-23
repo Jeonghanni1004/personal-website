@@ -22,7 +22,7 @@ export default function RecipeCard({ recipe, onSave }: Props) {
               'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
               recipe.saved ? 'bg-sun/30 text-orange' : 'bg-cream-dark text-ink-muted',
             )}
-            aria-label="收藏"
+            aria-label={recipe.saved ? '取消收藏' : '收藏'}
           >
             <Bookmark size={18} className={recipe.saved ? 'fill-current' : ''} />
           </button>

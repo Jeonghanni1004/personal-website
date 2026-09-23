@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 import { Heart, MessageCircle, Bookmark } from 'lucide-react';
 import type { Post } from '../types';
 import SafeImage from './SafeImage';
-import { formatDistanceToNow } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
+import { formatFeedTime } from '../utils/time';
 
 interface Props {
   post: Post;
@@ -12,10 +11,7 @@ interface Props {
 }
 
 export default function PostCard({ post, onLike, onSave }: Props) {
-  const time = formatDistanceToNow(new Date(post.createdAt), {
-    addSuffix: true,
-    locale: zhCN,
-  });
+  const time = formatFeedTime(post.createdAt);
 
   return (
     <article className="card overflow-hidden mb-4">

@@ -4,7 +4,7 @@ import PageHeader from '../components/PageHeader';
 import PageTransition from '../components/PageTransition';
 import RecipeCard from '../components/RecipeCard';
 import { INGREDIENT_CHIPS } from '../data/recipes';
-import { generateRecipe, saveRecipe, getRecipes } from '../api';
+import { generateRecipe, saveRecipe, unsaveRecipe, getRecipes } from '../api';
 import type { Recipe } from '../types';
 import { cn } from '../utils/meal';
 
@@ -54,10 +54,17 @@ export default function CookPage() {
     }, 1000);
   };
 
-  const onSave = async () => {
+  const onToggleSave = async () => {
     if (!recipe) return;
-    await saveRecipe(recipe);
-    setRecipe({ ...recipe, saved: true });
+    if (recipe.saved) {
+      await unsaveRecipe(recipe.id);
+      setRecipe({ ...recipe, saved: false });
+      refreshMine();
+    } else {
+      await saveRecipe(recipe);
+      setRecipe({ ...recipe, saved: true });
+      refreshMine();
+    }
   };
 
   return (
@@ -161,7 +168,7 @@ export default function CookPage() {
               {loading ? '正在想想怎么做…' : '生成菜谱'}
             </button>
 
-            {recipe && <RecipeCard recipe={recipe} onSave={onSave} />}
+            {recipe && <RecipeCard recipe={recipe} onSave={onToggleSave} />}
           </>
         ) : (
           <div>
@@ -176,7 +183,9 @@ export default function CookPage() {
                   key={r.id}
                   recipe={r}
                   onSave={async () => {
-                    /* already saved */
+                    await unsaveRecipe(r.id);
+                    refreshMine();
+                    if (recipe?.id === r.id) setRecipe({ ...recipe, saved: false });
                   }}
                 />
               ))

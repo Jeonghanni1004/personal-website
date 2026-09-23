@@ -1,31 +1,23 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, ImageIcon, RotateCw, Loader2 } from 'lucide-react';
+import { Camera, ImageIcon, Loader2 } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import PageTransition from '../components/PageTransition';
 import MoodSelector from '../components/MoodSelector';
 import SafeImage from '../components/SafeImage';
+import ImageEditPanel from '../components/ImageEditPanel';
 import { createDiaryEntry, mockRecognizeDish, MOCK_CAMERA_IMAGES } from '../api';
 import type { Mood } from '../types';
 import { format } from 'date-fns';
-import { cn } from '../utils/meal';
 
 type Step = 'capture' | 'edit' | 'meta';
-
-const FILTERS = [
-  { id: 'none', label: '原图', css: 'none' },
-  { id: 'warm', label: '暖调', css: 'sepia(0.25) saturate(1.2)' },
-  { id: 'fresh', label: '清新', css: 'saturate(1.3) brightness(1.05)' },
-  { id: 'film', label: '胶片', css: 'contrast(1.1) saturate(0.85)' },
-];
 
 export default function PhoneEatPage() {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState<Step>('capture');
   const [image, setImage] = useState('');
-  const [rotation, setRotation] = useState(0);
-  const [filter, setFilter] = useState('none');
+  const [editedImage, setEditedImage] = useState('');
   const [foodName, setFoodName] = useState('');
   const [mood, setMood] = useState<Mood | undefined>();
   const [note, setNote] = useState('');
@@ -35,15 +27,18 @@ export default function PhoneEatPage() {
   const useMock = () => {
     const src = MOCK_CAMERA_IMAGES[Math.floor(Math.random() * MOCK_CAMERA_IMAGES.length)];
     setImage(src);
+    setEditedImage('');
     setStep('edit');
   };
 
   const onFile = (file: File) => {
     setImage(URL.createObjectURL(file));
+    setEditedImage('');
     setStep('edit');
   };
 
-  const goMeta = async () => {
+  const goMeta = async (dataUrl: string) => {
+    setEditedImage(dataUrl);
     setStep('meta');
     setRecognizing(true);
     const name = await mockRecognizeDish();
@@ -52,7 +47,8 @@ export default function PhoneEatPage() {
   };
 
   const save = async () => {
-    if (!image || !foodName) return;
+    const finalImage = editedImage || image;
+    if (!finalImage || !foodName) return;
     setSaving(true);
     const now = new Date();
     const hour = now.getHours();
@@ -64,15 +60,13 @@ export default function PhoneEatPage() {
       time: format(now, 'HH:mm'),
       mealType,
       foodName,
-      image,
+      image: finalImage,
       note: note || undefined,
       mood,
     });
     setSaving(false);
     navigate(`/diary/${format(now, 'yyyy-MM-dd')}`);
   };
-
-  const filterCss = FILTERS.find((f) => f.id === filter)?.css || 'none';
 
   return (
     <PageTransition>
@@ -113,54 +107,15 @@ export default function PhoneEatPage() {
           </div>
         )}
 
-        {step === 'edit' && (
-          <div>
-            <div className="rounded-[28px] overflow-hidden mb-4 aspect-[3/4] bg-cream-dark">
-              <img
-                src={image}
-                alt="预览"
-                className="w-full h-full object-cover"
-                style={{ filter: filterCss, transform: `rotate(${rotation}deg)` }}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = MOCK_CAMERA_IMAGES[0];
-                }}
-              />
-            </div>
-
-            <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-              {FILTERS.map((f) => (
-                <button
-                  key={f.id}
-                  type="button"
-                  onClick={() => setFilter(f.id)}
-                  className={cn(
-                    'px-4 py-2 rounded-full text-sm shrink-0 border',
-                    filter === f.id
-                      ? 'bg-tomato text-white border-tomato'
-                      : 'bg-card border-border',
-                  )}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setRotation((r) => r + 90)}
-              className="btn-secondary w-full py-3 mb-3 flex items-center justify-center gap-2"
-            >
-              <RotateCw size={16} /> 旋转
-            </button>
-            <button type="button" onClick={goMeta} className="btn-primary w-full py-4">
-              下一步
-            </button>
-          </div>
-        )}
+        {step === 'edit' && <ImageEditPanel image={image} onNext={goMeta} />}
 
         {step === 'meta' && (
           <div className="space-y-5">
-            <SafeImage src={image} className="w-full aspect-video rounded-[24px]" alt="" />
+            <SafeImage
+              src={editedImage || image}
+              className="w-full aspect-video rounded-[24px]"
+              alt=""
+            />
 
             <div>
               <label className="text-sm text-ink-muted mb-1.5 block">菜品名称</label>

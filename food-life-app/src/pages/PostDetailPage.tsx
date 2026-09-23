@@ -6,8 +6,7 @@ import PageTransition from '../components/PageTransition';
 import SafeImage from '../components/SafeImage';
 import { getPost, likePost, savePost, commentPost } from '../api';
 import type { Post } from '../types';
-import { formatDistanceToNow } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
+import { formatFeedTime } from '../utils/time';
 
 export default function PostDetailPage() {
   const { postId } = useParams();
@@ -62,10 +61,7 @@ export default function PostDetailPage() {
           <div>
             <p className="font-semibold">{post.author.name}</p>
             <p className="text-xs text-ink-muted">
-              {formatDistanceToNow(new Date(post.createdAt), {
-                addSuffix: true,
-                locale: zhCN,
-              })}
+              {formatFeedTime(post.createdAt)}
               {post.location ? ` · ${post.location}` : ''}
             </p>
           </div>

@@ -1,30 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Grid3X3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Grid3X3, CalendarDays } from 'lucide-react';
 import {
   addMonths,
   subMonths,
+  addYears,
+  subYears,
+  addDays,
+  subDays,
   format,
-  startOfWeek,
-  addWeeks,
-  subWeeks,
+  parseISO,
 } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import PageTransition from '../components/PageTransition';
-import DiaryCalendar, { DiaryWeekView } from '../components/DiaryCalendar';
+import DiaryCalendar, {
+  DiaryYearView,
+  DiaryDayView,
+} from '../components/DiaryCalendar';
 import { getDiaryEntries } from '../api';
 import type { DiaryEntry } from '../types';
 import { cn } from '../utils/meal';
 
-type ViewMode = 'month' | 'week';
+type ViewMode = 'year' | 'month' | 'day';
 
 export default function DiaryPage() {
   const navigate = useNavigate();
+  const dateInputRef = useRef<HTMLInputElement>(null);
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
-  const [month, setMonth] = useState(new Date());
-  const [weekStart, setWeekStart] = useState(() =>
-    startOfWeek(new Date(), { weekStartsOn: 1 }),
-  );
+  const [cursor, setCursor] = useState(new Date());
   const [view, setView] = useState<ViewMode>('month');
   const [loading, setLoading] = useState(true);
 
@@ -35,6 +38,32 @@ export default function DiaryPage() {
     });
   }, []);
 
+  const goPrev = () => {
+    if (view === 'year') setCursor((d) => subYears(d, 1));
+    else if (view === 'month') setCursor((d) => subMonths(d, 1));
+    else setCursor((d) => subDays(d, 1));
+  };
+
+  const goNext = () => {
+    if (view === 'year') setCursor((d) => addYears(d, 1));
+    else if (view === 'month') setCursor((d) => addMonths(d, 1));
+    else setCursor((d) => addDays(d, 1));
+  };
+
+  const title =
+    view === 'year'
+      ? format(cursor, 'yyyy年', { locale: zhCN })
+      : view === 'month'
+        ? format(cursor, 'yyyy年M月', { locale: zhCN })
+        : format(cursor, 'yyyy年M月d日', { locale: zhCN });
+
+  const onPickDate = (value: string) => {
+    if (!value) return;
+    const d = parseISO(value);
+    setCursor(d);
+    setView('day');
+  };
+
   return (
     <PageTransition>
       <div className="page">
@@ -43,19 +72,37 @@ export default function DiaryPage() {
             <h1 className="font-display text-3xl font-bold">美食日记</h1>
             <p className="text-ink-muted text-sm mt-0.5">我的吃饭日历</p>
           </div>
-          <Link
-            to="/diary/photos"
-            className="flex items-center gap-1 text-sm font-medium text-tomato px-3 py-2 rounded-full bg-tomato/10"
-          >
-            <Grid3X3 size={16} /> 仅图片
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => dateInputRef.current?.showPicker?.() ?? dateInputRef.current?.click()}
+              className="w-10 h-10 rounded-full bg-cream-dark flex items-center justify-center text-ink"
+              aria-label="选择日期"
+            >
+              <CalendarDays size={18} />
+            </button>
+            <input
+              ref={dateInputRef}
+              type="date"
+              className="sr-only"
+              value={format(cursor, 'yyyy-MM-dd')}
+              onChange={(e) => onPickDate(e.target.value)}
+            />
+            <Link
+              to="/diary/photos"
+              className="flex items-center gap-1 text-sm font-medium text-tomato px-3 py-2 rounded-full bg-tomato/10"
+            >
+              <Grid3X3 size={16} /> 仅图片
+            </Link>
+          </div>
         </header>
 
         <div className="flex gap-2 mb-4 p-1 bg-cream-dark rounded-full w-fit">
           {(
             [
+              ['year', '年'],
               ['month', '月'],
-              ['week', '周'],
+              ['day', '日'],
             ] as const
           ).map(([key, label]) => (
             <button
@@ -76,27 +123,23 @@ export default function DiaryPage() {
           <button
             type="button"
             className="w-9 h-9 rounded-full bg-cream-dark flex items-center justify-center"
-            onClick={() =>
-              view === 'month'
-                ? setMonth((m) => subMonths(m, 1))
-                : setWeekStart((w) => subWeeks(w, 1))
-            }
+            onClick={goPrev}
+            aria-label="上一段"
           >
             <ChevronLeft size={18} />
           </button>
-          <h2 className="font-display text-lg font-semibold">
-            {view === 'month'
-              ? format(month, 'yyyy年M月', { locale: zhCN })
-              : `${format(weekStart, 'M月d日', { locale: zhCN })} 这周`}
-          </h2>
+          <button
+            type="button"
+            onClick={() => dateInputRef.current?.showPicker?.() ?? dateInputRef.current?.click()}
+            className="font-display text-lg font-semibold"
+          >
+            {title}
+          </button>
           <button
             type="button"
             className="w-9 h-9 rounded-full bg-cream-dark flex items-center justify-center"
-            onClick={() =>
-              view === 'month'
-                ? setMonth((m) => addMonths(m, 1))
-                : setWeekStart((w) => addWeeks(w, 1))
-            }
+            onClick={goNext}
+            aria-label="下一段"
           >
             <ChevronRight size={18} />
           </button>
@@ -104,18 +147,31 @@ export default function DiaryPage() {
 
         {loading ? (
           <p className="text-center text-ink-muted py-16">翻开日记本…</p>
+        ) : view === 'year' ? (
+          <DiaryYearView
+            year={cursor}
+            entries={entries}
+            onSelectMonth={(m) => {
+              setCursor(m);
+              setView('month');
+            }}
+          />
         ) : view === 'month' ? (
           <div className="card p-3">
             <DiaryCalendar
-              month={month}
+              month={cursor}
               entries={entries}
-              onSelectDate={(date) => navigate(`/diary/${date}`)}
+              onSelectDate={(date) => {
+                setCursor(parseISO(date));
+                setView('day');
+                navigate(`/diary/${date}`);
+              }}
             />
           </div>
         ) : (
-          <DiaryWeekView
+          <DiaryDayView
+            day={cursor}
             entries={entries}
-            weekStart={weekStart}
             onSelectDate={(date) => navigate(`/diary/${date}`)}
           />
         )}
