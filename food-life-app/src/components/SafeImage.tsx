@@ -1,36 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '../utils/meal';
+import { FOOD_PHOTOS } from '../data/mockImages';
 
 interface Props {
   src?: string;
   alt?: string;
   className?: string;
+  /** @deprecated kept for call-site compat; unused — fail over to real food photo */
   fallbackEmoji?: string;
 }
 
-export default function SafeImage({
-  src,
-  alt = '',
-  className,
-  fallbackEmoji = '🍽️',
-}: Props) {
-  const [failed, setFailed] = useState(!src);
+const FALLBACK_SRC = FOOD_PHOTOS.bowl;
 
-  if (failed || !src) {
-    return (
-      <div className={cn('img-fallback', className)} aria-label={alt}>
-        <span>{fallbackEmoji}</span>
-      </div>
-    );
-  }
+export default function SafeImage({ src, alt = '', className }: Props) {
+  const [current, setCurrent] = useState(src || FALLBACK_SRC);
+
+  useEffect(() => {
+    setCurrent(src || FALLBACK_SRC);
+  }, [src]);
 
   return (
     <img
-      src={src}
+      src={current}
       alt={alt}
-      className={cn('object-cover', className)}
-      onError={() => setFailed(true)}
+      className={cn('object-cover bg-cream-dark', className)}
       loading="lazy"
+      onError={() => {
+        if (current !== FALLBACK_SRC) setCurrent(FALLBACK_SRC);
+      }}
     />
   );
 }

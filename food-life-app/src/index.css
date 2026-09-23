@@ -64,6 +64,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  isolation: isolate;
 }
 
 @media (max-width: 480px) {
@@ -87,6 +88,7 @@ body {
 .app-content--flush {
   flex: 1;
   min-height: 0;
+  position: relative;
 }
 
 .app-content > * {

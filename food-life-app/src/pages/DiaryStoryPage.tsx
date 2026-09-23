@@ -21,19 +21,21 @@ export default function DiaryStoryPage() {
 
   if (!date || !ready) {
     return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center text-white/70">
+      <div className="absolute inset-0 bg-black flex items-center justify-center text-white/70">
         打开这一天…
       </div>
     );
   }
 
   return (
-    <AnimatePresence>
-      <DiaryStory
-        entries={entries}
-        date={date}
-        onClose={() => navigate('/diary')}
-      />
-    </AnimatePresence>
+    <div className="absolute inset-0 z-[90]">
+      <AnimatePresence>
+        <DiaryStory
+          entries={entries}
+          date={date}
+          onClose={() => navigate('/diary')}
+        />
+      </AnimatePresence>
+    </div>
   );
 }

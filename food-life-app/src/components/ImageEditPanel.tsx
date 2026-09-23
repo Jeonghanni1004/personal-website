@@ -246,9 +246,11 @@ export default function ImageEditPanel({ image, onNext }: Props) {
           }}
           onLoad={() => setImgReady(true)}
           onError={() => {
-            const fallback = MOCK_CAMERA_IMAGES[0];
-            if (src !== fallback) {
-              setSrc(fallback);
+            const list = MOCK_CAMERA_IMAGES;
+            const idx = list.indexOf(src);
+            const next = list[(idx + 1) % list.length] || list[0];
+            if (src !== next) {
+              setSrc(next);
               setImgReady(false);
             } else {
               setImgReady(true);

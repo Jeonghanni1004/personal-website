@@ -31,7 +31,7 @@ export const FOOD_PHOTOS = {
 export const FOOD_PHOTO_LIST = Object.values(FOOD_PHOTOS);
 
 /** 手机先吃 / 发帖 Mock 示例图（真实美食照片） */
-export const MOCK_CAMERA_IMAGES = [
+export const MOCK_CAMERA_IMAGES: string[] = [
   FOOD_PHOTOS.eggs,
   FOOD_PHOTOS.bowl,
   FOOD_PHOTOS.feast,
